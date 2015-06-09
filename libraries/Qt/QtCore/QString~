@@ -1,0 +1,26 @@
+/*******************************************************************\
+
+
+Author: Felipe Rodrigues
+
+
+\*******************************************************************/
+
+#include "string"
+#include "../../cstddef"
+
+class QString
+{
+	std::string str;
+public:
+	QString (){
+		this->str = std::string();
+	}
+	QString ( const char * unicode ){
+		__ESBMC_assert(unicode != NULL, "Invalid string");
+		this->str = unicode;
+	}
+	std::string	toStdString () const{}
+	~QString (){}
+
+};

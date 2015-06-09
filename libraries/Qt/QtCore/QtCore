@@ -1,0 +1,10 @@
+void qWarning ( const char * msg, ... ){}
+
+class QEvent {
+public:
+	enum Type{ GraphicsSceneMousePress };
+
+	QEvent();
+	Type type () const{}
+	~QEvent();
+};
