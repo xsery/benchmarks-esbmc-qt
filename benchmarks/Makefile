@@ -1,44 +1,32 @@
-default: tests.log
+# Directories
+QStack := QStack
+QList := QList
+QLinkedList := QLinkedList
+qt := qt
 
-test:
-	@./test.pl
 
-tests.log: test.pl
-	@./test.pl
+# Clean
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+        TARGET := clean
+endif
+clean: all
 
-llvm: test.pl
-	@./llvmconvert.sh
-	@./test.pl --llvm
+# Make them all
+all: $(QStack) $(QList) $(QLinkedList) $(qt)
 
-show:
-	@for dir in *; do \
-		if [ -d "$$dir" ]; then \
-			vim -o "$$dir/main.cpp" "$$dir/main.out"; \
-		fi; \
-	done;
+$(QStack) $(QList) $(QLinkedList) $(qt):
+	$(MAKE) --directory=$@ $(TARGET)
 
-clean:
-	@for dir in *; do \
-		if [ -d "$$dir" ]; then \
-			rm -f "$$dir/main.out"; \
-		fi; \
-	done;
-	@for dir in *; do \
-		if [ -d "$$dir" ]; then \
-			rm -f "$$dir/smt*.tmp"; \
-		fi; \
-	done;
-	find . -name *.*~ | xargs rm -f
-	find . -name *.xml | xargs rm -f
-	find . -name *.out | xargs rm -f
-	find . -name *.smt | xargs rm -f
-	find . -name txt | xargs rm -f
-	find . -name *.txt | xargs rm -f
-	find . -name *.log | xargs rm -f
-	find . -name *.trace | xargs rm -f
-	find . -name *.o | xargs rm -f
-	find . -name *.bc | xargs rm -f
-	find . -name *.ll | xargs rm -f
-	find . -name *.c | xargs rm -f
-	find . -name *.dat | xargs rm -f
-	rm -f tests.log	
+#Make only STL directories
+stl: $(QStack) $(QList) $(QLinkedList)
+
+# Make each directory
+algorithm: $(algorithm)
+QStack := $(QStack)
+QList := $(QList)
+QLinkedList := $(QLinkedList)
+qt := $(qt)
+
+# Allow parallel make
+
+.PHONY: all $(QStack) $(QList) $(QLinkedList) $(qt)
