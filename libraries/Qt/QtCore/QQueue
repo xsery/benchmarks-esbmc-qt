@@ -1,0 +1,82 @@
+/*******************************************************************\
+ 
+ Module: QQueue
+ 
+ Author: Felipe Monteiro
+ 
+ Date: June 2015
+ 
+ \*******************************************************************/
+
+#ifndef STL_QQueue
+#define STL_QQueue
+
+#define QQueue_CAPACITY 1000
+
+namespace std
+{
+    
+    template<class T> class QQueue
+    {
+        T buf[QQueue_CAPACITY];
+        int _size=0;
+        int front=0;
+        int tail=0;
+        
+    public:
+        
+        QQueue():_size(0), front(0), tail(0){}
+        ~QQueue(){}
+        
+        void enqueue ( const T& t )
+        {
+            assert(0 <= _size);
+            __ESBMC_assert(_size < QQueue_CAPACITY, "QQueue overflow");
+            buf[tail] = t;
+            _size++;
+            if (tail == QQueue_CAPACITY)
+                tail = 1;
+            else
+                tail++;
+        }
+        
+        bool isEmpty ( ) const
+        {
+            if (front == tail)
+                return true;
+            else
+                return false;
+        }
+        
+        T& head ( )
+        {
+            assert(!isEmpty());
+            return buf[front];
+        }
+        
+        int size() const
+        {
+            assert(0 <= _size && _size <= QQueue_CAPACITY);
+            return _size;
+        }
+        
+        T dequeue()
+        {
+            __ESBMC_assert(size()>0, "QQueue underflow");
+            _size--;
+            if (front == QQueue_CAPACITY)
+                front = 1;
+            else
+                front++;
+        }
+        
+        T& back ()
+        {
+            assert(!isEmpty());
+            return buf[tail-1];
+        }
+    };
+    
+}
+
+#endif
