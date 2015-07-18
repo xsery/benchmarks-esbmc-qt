@@ -3,6 +3,7 @@ QStack := QStack
 QList := QList
 QLinkedList := QLinkedList
 qt := qt
+QQueue := QQueue
 
 
 # Clean
@@ -12,13 +13,13 @@ endif
 clean: all
 
 # Make them all
-all: $(QStack) $(QList) $(QLinkedList) $(qt)
+all: $(QStack) $(QList) $(QLinkedList) $(qt) $(QQueue)
 
-$(QStack) $(QList) $(QLinkedList) $(qt):
+$(QStack) $(QList) $(QLinkedList) $(qt) $(QQueue):
 	$(MAKE) --directory=$@ $(TARGET)
 
 #Make only STL directories
-stl: $(QStack) $(QList) $(QLinkedList)
+stl: $(QStack) $(QList) $(QLinkedList) $(QQueue)
 
 # Make each directory
 algorithm: $(algorithm)
@@ -26,7 +27,8 @@ QStack := $(QStack)
 QList := $(QList)
 QLinkedList := $(QLinkedList)
 qt := $(qt)
+QQueue := $(QQueue)
 
 # Allow parallel make
 
-.PHONY: all $(QStack) $(QList) $(QLinkedList) $(qt)
+.PHONY: all $(QStack) $(QList) $(QLinkedList) $(qt) $(QQueue)
