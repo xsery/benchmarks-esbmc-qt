@@ -10,7 +10,7 @@
 #ifndef __STL_LIST
 #define __STL_LIST
 
-#define list QList
+#define list QLinkedList
 
 #include "../../definitions.h"
 
