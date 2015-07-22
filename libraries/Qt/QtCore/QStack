@@ -57,6 +57,23 @@ const T &	top () const;
 int size(){
 return this->_top;
 }
+
+void swap( QStack<T>& other ){
+   QStack<T> tmp;
+   for(int i = 0; i < other.size(); i++){
+      tmp.push(other.top());
+      other.pop();
+   }
+   for(int i = 0; i < this->size(); i++){
+      other.push(this->top());
+      this->pop();
+   }
+   for(int i = 0; i < tmp.size(); i++){
+      this->push(tmp.top());
+      tmp.pop();
+   }
+}
+
 };
 
 #endif
