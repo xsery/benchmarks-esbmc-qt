@@ -75,6 +75,22 @@ namespace std
             assert(!isEmpty());
             return buf[tail-1];
         }
+
+		void swap( QQueue<T>& other ){
+   			QQueue<T> tmp;
+   			for(int i = 0; other.size() > 0; i++){
+      			tmp.enqueue(other.head());
+      			other.dequeue();
+   			}
+   			for(int i = 0; this->size() > 0; i++){
+     			other.enqueue(this->head());
+      			this->dequeue();
+   			}
+   			for(int i = 0; tmp.size() > 0; i++){
+      			this->enqueue(tmp.head());
+      			tmp.dequeue();
+   			}
+		}
     };
     
 }
