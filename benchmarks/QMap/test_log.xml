@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <all-results>
-  <date_time_run>Jul 18, 2015 16:50:17</date_time_run>
+  <date_time_run>Jul 22, 2015 14:23:25</date_time_run>
   <run-test>
     <item_01_test-name>map_begin</item_01_test-name>
     <item_02_input-code>main.cpp </item_02_input-code>
@@ -267,7 +267,7 @@
     <item_03_output-code>main.out</item_03_output-code>
     <item_04_esbmc-option>esbmc main.cpp  --unwind 10 --no-unwinding-assertions -I ~/libraries/Qt/QtCore/ -I ~/libraries/ --ir --memlimit 6000000 --timeout 60m</item_04_esbmc-option>
     <item_05_execution-status>[OKAY]</item_05_execution-status>
-    <item_06_exit-signal>134</item_06_exit-signal>
+    <item_06_exit-signal>6</item_06_exit-signal>
     <item_07_signal-num>0</item_07_signal-num>
     <item_08_core-signal>0</item_08_core-signal>
     <item_09_expected-result>[SUCCESSFUL]</item_09_expected-result>
@@ -280,7 +280,7 @@
     <item_03_output-code>main.out</item_03_output-code>
     <item_04_esbmc-option>esbmc main.cpp  --unwind 10 --no-unwinding-assertions -I ~/libraries/Qt/QtCore/ -I ~/libraries/ --ir --memlimit 6000000 --timeout 60m</item_04_esbmc-option>
     <item_05_execution-status>[OKAY]</item_05_execution-status>
-    <item_06_exit-signal>134</item_06_exit-signal>
+    <item_06_exit-signal>6</item_06_exit-signal>
     <item_07_signal-num>0</item_07_signal-num>
     <item_08_core-signal>0</item_08_core-signal>
     <item_09_expected-result>[FAILED]</item_09_expected-result>
