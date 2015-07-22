@@ -6,12 +6,12 @@ using namespace std;
 
 int main ()
 {
-    QQueue<int> QQueue;
-    QQueue.enqueue(1);
-    QQueue.enqueue(2);
-    QQueue.enqueue(3);
-    while (!QQueue.isEmpty())
-        cout << QQueue.dequeue() << endl;
-    assert(QQueue.isEmpty());
+    QQueue<int> x;
+    x.enqueue(1);
+    x.enqueue(2);
+    x.enqueue(3);
+    while (!x.isEmpty())
+        cout << x.dequeue() << endl;
+    assert(x.isEmpty());
   return 0;
 }
