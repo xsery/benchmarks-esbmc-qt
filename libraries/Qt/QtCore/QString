@@ -8,22 +8,43 @@ Author: Felipe Rodrigues
 
 #include "string"
 #include "../../cstddef"
+#include "../../cstring"
 
 class QString
 {
 	char* str;
+	unsigned int _size;
 public:
 	QString (){
         char* tmp = "";
 		this->str = tmp;
+		this->_size = 0;
 	}
 	QString ( char * unicode ){
 		__ESBMC_assert(unicode != NULL, "Invalid string");
 		this->str = unicode;
+		this->_size = strlen(unicode);
 	}
 	std::string	toStdString () const{
         return std::string(this->str);
     }
 	~QString (){}
 
+	bool operator ==(const QString& x) const {
+		if(this->str != x.str)
+			return false;
+		return true;
+	}
+
+	bool operator !=(const QString& x) const {
+		if(this->_size == x._size)
+			return false;
+		return true;
+	}
+
+	bool operator <(const QString& x) const {
+		if(this->_size > x._size)
+			return false;
+		return true;
+	}
 };

@@ -1,9 +1,9 @@
 /*******************************************************************
- Module:
+ Module: QList
 
- Author: Felipe Rodrigues
+ Author: Felipe Monteiro
 
- Date: October 2012
+ Date: June 2015
 
  \*******************************************************************/
 
@@ -31,7 +31,7 @@ public:
 
 	typedef bool (pred_double)(T, T);
 	typedef bool (pred)(T &);
-
+	
 	value_type _list[LIST_MAX_SIZE];
 	size_type _size;
 
@@ -93,6 +93,69 @@ public:
 			return true;
 		}
 	};
+
+	typedef iterator Iterator;
+	
+	class const_iterator {
+	public:
+		value_type* it;
+		size_type pos;
+
+		const_iterator(const const_iterator& x){
+			this->it = x.it;
+			this->pos = x.pos;
+		}
+		const_iterator(){}
+		const_iterator& operator=(const const_iterator& x) {
+			this->it = x.it;
+			this->pos = x.pos;
+			return *this;
+		}
+
+		T* operator ->() {
+			return this->it;
+		}
+
+		T operator *() {
+			return *this->it;
+		}
+
+		const_iterator operator ++() {
+			this->it++;
+			this->pos++;
+			return *this;
+		}
+		const_iterator operator ++(int) {
+			this->it++;
+			this->pos++;
+			return *this;
+		}
+
+		const_iterator operator --() {
+			this->it--;
+			this->pos--;
+			return *this;
+		}
+		const_iterator operator --(int) {
+			this->it--;
+			this->pos--;
+			return *this;
+		}
+
+		bool operator ==(const const_iterator& x) const {
+			if(this->it != x.it)
+				return false;
+			return true;
+		}
+
+		bool operator !=(const const_iterator& x) const {
+			if(this->it == x.it)
+				return false;
+			return true;
+		}
+	};
+
+	typedef const_iterator ConstIterator;
 
 	class reverse_iterator {
 	public:
@@ -164,6 +227,7 @@ public:
 		this->_size = n;
 	}
 
+
 	list(value_type* t1, value_type* t2) {
 		__ESBMC_assert(t1 != NULL,
 				"\n  In the first parameter is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
@@ -193,6 +257,10 @@ public:
 		this->_size = x._size;
 	}
 
+	list( list<T> && other ){
+		//TODO
+	}
+
 	~list() {
 		for(int i = 0; i < this->_size; i++){
 			this->_list[i] = T();
@@ -200,7 +268,28 @@ public:
 		this->_size = 0;
 	}
 
-	int indexOf (T value, int from = 0) { return 0; }
+	void append(const T& value){
+		this->push_back(value);
+	}
+
+	void append(const list<T>& value){
+		size_type _s = 0;
+		this->clear();
+		for(int i = 0; i < _s; i++){
+			this->_list[i] = value._list[i];
+		}
+		this->_size = value._size;
+	}
+
+	const T& at(int i) const{
+		__ESBMC_assert(i >= 0 && i < this->_size, "Invalid parameter");
+		return this->_list[i];
+	}
+
+	int indexOf (T value, int from = 0){
+		//TODO
+		return 0;
+	}
 
 	iterator& begin() {
 		iterator it;
@@ -215,6 +304,7 @@ public:
 		it.pos = this->_size;
 		return it;
 	}
+/*
 	reverse_iterator rbegin() {
 		reverse_iterator rit;
 		rit.it = &(this->_list[this->_size - 1]);
@@ -227,7 +317,7 @@ public:
 		rit.pos = 0;
 		return rit;
 	}
-
+*/
 	size_type size() const {
 		return this->_size;
 	}
@@ -541,8 +631,29 @@ public:
 		for(int i = 0; i < _tmp._size; i++)
 			this->_list[i] = _tmp._list[i];
 	}
-};
 
+	bool operator==(const list<T>& y) {
+		if (this->_size != y._size)
+			return false;
+		//TODO
+		//for(int i = 0; i <  this->_size; i++)
+		//	if(this->_list[i] != y._list[i])
+		//		return false;
+		return true;
+	}
+
+	bool operator!=(const list<T>& y) {
+		if (this->_size == y._size)
+			return false;
+		//TODO
+		//for(int i = 0; i <  this->_size; i++)
+		//	if(this->_list[i] != y._list[i])
+		//		return false;
+		return true;
+	}
+
+};
+/*
 void advance(list<unsigned int>::iterator& it, int n) {
 	__ESBMC_assert(it.it != NULL,
 			"The first parameter must be different than NULL.");
@@ -550,7 +661,7 @@ void advance(list<unsigned int>::iterator& it, int n) {
 	it.pos = it.pos + n;
 	it.it = it.it+n;
 }
-
+*/
 void advance(list<int>::iterator& it, int n) {
 	__ESBMC_assert(it.it != NULL,
 			"The first parameter must be different than NULL.");
