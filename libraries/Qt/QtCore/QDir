@@ -8,8 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QtConcurrent {
+class QDir {
 public:
-	QtConcurrent();
-	~QtConcurrent();
+	QDir();
+	~QDir();
 };

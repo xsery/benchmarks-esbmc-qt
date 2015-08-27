@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QStylePlugin {
+class QRegularExpression {
 public:
-	QStylePlugin();
-	~QStylePlugin();
+	QRegularExpression();
+	~QRegularExpression();
 };
-

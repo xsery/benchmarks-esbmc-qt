@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QAccessiblePlugin {
+class QPersistentModelIndex {
 public:
-	QAccessiblePlugin();
-	~QAccessiblePlugin();
+	QPersistentModelIndex();
+	~QPersistentModelIndex();
 };
-

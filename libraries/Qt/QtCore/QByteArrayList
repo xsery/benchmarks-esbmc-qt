@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QImageIOPlugin {
+class QByteArrayList {
 public:
-	QImageIOPlugin();
-	~QImageIOPlugin();
+	QByteArrayList();
+	~QByteArrayList();
 };
-

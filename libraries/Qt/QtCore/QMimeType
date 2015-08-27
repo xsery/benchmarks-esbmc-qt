@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QGenericPluginFactory {
+class QMimeType {
 public:
-	QGenericPluginFactory();
-	~QGenericPluginFactory();
+	QMimeType();
+	~QMimeType();
 };
-

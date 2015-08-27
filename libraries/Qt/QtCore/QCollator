@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QGenericPlugin {
+class QCollator {
 public:
-	QGenericPlugin();
-	~QGenericPlugin();
+	QCollator();
+	~QCollator();
 };
-

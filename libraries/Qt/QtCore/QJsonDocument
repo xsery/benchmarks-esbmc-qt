@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QSqlDriverPlugin {
+class QJasonDocument {
 public:
-	QSqlDriverPlugin();
-	~QSqlDriverPlugin();
+	QJasonDocument();
+	~QJasonDocument();
 };
-

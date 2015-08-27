@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QScriptExtensionPlugin {
+class QJasonValue {
 public:
-	QScriptExtensionPlugin();
-	~QScriptExtensionPlugin();
+	QJasonValue();
+	~QJasonValue();
 };
-

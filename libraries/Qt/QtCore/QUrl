@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QIconEnginePlugin {
+class QUrl {
 public:
-	QIconEnginePlugin();
-	~QIconEnginePlugin();
+	QUrl();
+	~QUrl();
 };
-

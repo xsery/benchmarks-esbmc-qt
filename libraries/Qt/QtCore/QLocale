@@ -8,9 +8,8 @@ Date:
 
 \*******************************************************************/
 
-class QQmlExtensionPlugin {
+class QLocale {
 public:
-	QQmlExtensionPlugin();
-	~QQmlExtensionPlugin();
+	QLocale();
+	~QLocale();
 };
-
