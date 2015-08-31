@@ -381,7 +381,9 @@ namespace std {
         }
         
         bool endsWith(const T& value) const{
-            //TODO
+            if (!(this->empty()) & this->_list[this->_size - 1] == value)
+                return true;
+            return false;
         }
         
         T& first(){
@@ -397,42 +399,86 @@ namespace std {
         }
         
         list<T>	mid(int pos, int length = -1) const{
-            //TODO
+            __ESBMC_assert(pos >= 0 & pos < this->_size,"Position invalid.");
+            __ESBMC_assert(length >= 0 & length <= this->_size,"Position invalid.");
+            list<T> __newList;
+            if (length == -1) {
+                length = this->_size;
+            }
+            for (int i = pos; i < length; i++) {
+                __newList._list[i] = this->_list[i];
+            }
+            return __newList;
         }
         
-        void	move(int from, int to){
-            //TODO
+        void move(int from, int to){
+            __ESBMC_assert(from >= 0 && from < this->_size, "First position invalid.");
+            __ESBMC_assert(to >= 0 && to < this->_size, "Second position invalid.");
+            value_type x = this->_list[from];
+            if (from != to) {
+                if (from < to) {
+                    for (int i = from; i < to; i++) {
+                        this->_list[i] = this->_list[i+1];
+                    }
+                } else {
+                    for (int i = to; i < from; i++) {
+                        this->_list[i] = this->_list[i+1];
+                    }
+                }
+                this->_list[to] = x;
+            }
         }
         
         void prepend(const T & value){
-            //TODO
+            this->insert(this->begin(),value);
         }
         
         int	removeAll(const T & value){
-            //TODO
+            int j = 0;
+            for (int i = 0 ; i < this->_size; i++)
+                if (this->_list[i] == value)
+                    this->removeAt(i);
+            return j;
         }
         
-        void	removeAt(int i){
-            //TODO
+        void removeAt(int i){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            if (i == this->size() -1) {
+                this->_list[this->_size-1] = value_type();
+                this->_size--;
+            } else {
+                for (;i < this->_size - 1; i++)
+                    this->_list[i] = this->_list[i+1];
+                this->_list[i] = value_type();
+                this->_size--;
+            }
         }
         
-        void	removeFirst(){
-            //TODO
+        void removeFirst(){
+            __ESBMC_assert(!this->empty(), "List cannot be empty.");
+            this->removeAt(0);
         }
         
         void	removeLast(){
-            //TODO
+            __ESBMC_assert(!this->empty(), "List cannot be empty.");
+            this->removeAt(this->_size - 1);
         }
         
-        bool	removeOne(const T & value){
-            //TODO
+        bool removeOne(const T& value){
+            for (int i = 0 ; i < this->_size; i++)
+                if (this->_list[i] == value){
+                    this->removeAt(i);
+                    return true;
+                }
+            return false;
         }
         
-        void	replace(int i, const T & value){
-            //TODO
+        void replace(int i, const T& value){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            this->_list[i] = value;
         }
         
-        bool startsWith(const T & value) const{
+        bool startsWith(const T& value) const{
             //TODO
         }
         
