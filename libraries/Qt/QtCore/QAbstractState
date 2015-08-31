@@ -1,0 +1,16 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mario Angel
+
+Date: 
+
+\*******************************************************************/
+
+class QAbstractState {
+public:
+	QAbstractState();
+	~QAbstractState();
+};
+

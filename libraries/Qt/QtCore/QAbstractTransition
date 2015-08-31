@@ -1,0 +1,16 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mario Angel
+
+Date: 
+
+\*******************************************************************/
+
+class QAbstractTransition {
+public:
+	QAbstractTransition();
+	~QAbstractTransition();
+};
+
