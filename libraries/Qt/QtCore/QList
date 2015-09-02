@@ -7,35 +7,34 @@
  
  \*******************************************************************/
 
-#ifndef __STL_LIST
-#define __STL_LIST
+#ifndef __STL_QLIST
+#define __STL_QLIST
 
-#define list QList
+#include "../../definitions.h" //OK
+#include "QSet" //OK
+#include "QVector" //OK
+#include "../../list" //OK
 
-#include "../../definitions.h"
+#define LIST_MAX_SIZE 20  //OK
 
-#define LIST_MAX_SIZE 20
-
-namespace std {
-    
     template<class T>
-    class list {
+    class QList {
     public:
-        typedef T& reference;
-        typedef const T& const_reference;
-        typedef unsigned int size_type;
-        typedef int difference_type;
-        typedef T value_type;
-        typedef T* pointer;
-        typedef const T* const_pointer;
+        typedef T& reference; //OK
+        typedef const T& const_reference; //OK
+        typedef unsigned int size_type; //OK
+        typedef int difference_type; //OK
+        typedef T value_type; //OK
+        typedef T* pointer; //OK
+        typedef const T* const_pointer; //OK
         
         typedef bool (pred_double)(T, T);
         typedef bool (pred)(T &);
         
-        value_type _list[LIST_MAX_SIZE];
-        size_type _size;
+        value_type _list[LIST_MAX_SIZE]; //OK
+        size_type _size; //OK
         
-        class iterator {
+        class iterator { //OK
         public:
             value_type* it;
             size_type pos;
@@ -94,9 +93,9 @@ namespace std {
             }
         };
         
-        typedef iterator Iterator;
+        typedef iterator Iterator; //OK
         
-        class const_iterator {
+        class const_iterator { //OK
         public:
             value_type* it;
             size_type pos;
@@ -155,70 +154,13 @@ namespace std {
             }
         };
         
-        typedef const_iterator ConstIterator;
+        typedef const_iterator ConstIterator; //OK
         
-        class reverse_iterator {
-        public:
-            value_type* it;
-            size_type pos;
-            
-            reverse_iterator(const reverse_iterator& x){
-                this->it = x.it;
-                this->pos = x.pos;
-            }
-            reverse_iterator(){}
-            reverse_iterator& operator=(const reverse_iterator& x) {
-                this->it = x.it;
-                this->pos = x.pos;
-                return *this;
-            }
-            
-            T* operator ->() {
-                return this->it;
-            }
-            
-            T operator *() {
-                return *this->it;
-            }
-            
-            reverse_iterator operator ++() {
-                this->it++;
-                this->pos++;
-                return *this;
-            }
-            reverse_iterator operator ++(int) {
-                this->it++;
-                this->pos++;
-                return *this;
-            }
-            
-            reverse_iterator operator --() {
-                //todo
-                return *this;
-            }
-            reverse_iterator operator --(int) {
-                //todo
-                return *this;
-            }
-            
-            bool operator ==(const reverse_iterator& x) const {
-                if(this->it != x.it)
-                    return false;
-                return true;
-            }
-            
-            bool operator !=(const reverse_iterator& x) const {
-                if(this->it == x.it)
-                    return false;
-                return true;
-            }
-        };
-        
-        list(){
+        QList(){ //OK
             this->_size = 0;
         }
-        
-        list(size_type n, const value_type& value = value_type()) {
+        /*
+        QList(size_type n, const value_type& value = value_type()) {
             __ESBMC_assert(n > 0,
                            "  In the first parameter is specified the container size,\n  therefore, this parameter must be greater than zero.\n");
             for(int i = 0; i < n; i++){
@@ -227,8 +169,7 @@ namespace std {
             this->_size = n;
         }
         
-        
-        list(value_type* t1, value_type* t2) {
+        QList(value_type* t1, value_type* t2) {
             __ESBMC_assert(t1 != NULL,
                            "\n  In the first parameter is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
             __ESBMC_assert(t2 != NULL,
@@ -241,7 +182,7 @@ namespace std {
             this->_size = i;
         }
         
-        list(iterator first, iterator last) {
+        QList(iterator first, iterator last) {
             __ESBMC_assert(first.it != NULL,
                            "\n  In the first parameter (first) is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
             int i;
@@ -250,18 +191,18 @@ namespace std {
             }
             this->_size = i;
         }
-        
-        list(const list<T>& x) {
+        */
+        QList(const QList<T>& x) { //OK
             for(int i = 0; i < x._size; i++)
                 this->_list[i] = x._list[i];
             this->_size = x._size;
         }
         
-        list( list<T> && other ){
+        QList( QList<T> && other ){
             //TODO
         }
         
-        ~list() {
+        ~QList() { //OK
             for(int i = 0; i < this->_size; i++){
                 this->_list[i] = T();
             }
@@ -272,7 +213,7 @@ namespace std {
             this->push_back(value);
         }
         
-        void append(const list<T>& value){
+        void append(const QList<T>& value){
             size_type _s = 0;
             this->clear();
             for(int i = 0; i < _s; i++){
@@ -323,6 +264,14 @@ namespace std {
             it.pos = this->_size;
             return it;
         }
+
+        const_iterator& end() const {
+            const_iterator it;
+            this->_list[this->_size] = value_type();
+            it.it = &(this->_list[this->_size]);
+            it.pos = this->_size;
+            return it;
+        }
         
         const_iterator cend() const{
             const_iterator it;
@@ -331,20 +280,6 @@ namespace std {
             it.pos = this->_size;
             return it;
         }
-        /*
-         reverse_iterator rbegin() {
-         reverse_iterator rit;
-         rit.it = &(this->_list[this->_size - 1]);
-         rit.pos = this->_size - 1;
-         return rit;
-         }
-         reverse_iterator rend() {
-         reverse_iterator rit;
-         rit.it = &(this->_list[0]);
-         rit.pos = 0;
-         return rit;
-         }
-         */
         
         const_iterator constBegin() const{
             const_iterator it;
@@ -398,10 +333,10 @@ namespace std {
             return this->_size;
         }
         
-        list<T>	mid(int pos, int length = -1) const{
+        QList<T> mid(int pos, int length = -1) const{
             __ESBMC_assert(pos >= 0 & pos < this->_size,"Position invalid.");
             __ESBMC_assert(length >= 0 & length <= this->_size,"Position invalid.");
-            list<T> __newList;
+            QList<T> __newList;
             if (length == -1) {
                 length = this->_size;
             }
@@ -459,7 +394,7 @@ namespace std {
             this->removeAt(0);
         }
         
-        void	removeLast(){
+        void removeLast(){
             __ESBMC_assert(!this->empty(), "List cannot be empty.");
             this->removeAt(this->_size - 1);
         }
@@ -479,34 +414,63 @@ namespace std {
         }
         
         bool startsWith(const T& value) const{
-            //TODO
+            if (!(this->empty()) & this->_list[0] == value)
+                return true;
+            return false;
         }
         
         void swap(int i, int j){
-            //TODO
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            __ESBMC_assert(0 <= j < this->size(),"Invalid position.");
+            value_type x = this->_list[i];
+            this->_list[i] = this->_list[j];
+            this->_list[j] = x;
         }
         
         T takeAt(int i){
-            //TODO
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            value_type x = this->_list[i];
+            this->removeAt(i);
+            return x;
         }
         
         T takeFirst(){
-            //TODO
+            value_type x = this->_list[0];
+            this->removeAt(0);
+            return x;
         }
         
         T takeLast(){
+            value_type x = this->_list[this->_size - 1];
+            this->removeAt(this->_size - 1);
+            return x;
+        }
+        
+        QSet<T>	toSet() const{
             //TODO
         }
         
-        //QSet<T>	toSet() const
-        //std::list<T>	toStdList() const
-        //QVector<T>	toVector() const
+        std::list<T> toStdList() const{
+            std::list<T> __list;
+            for (int i = 0; i < this->_size; i++)
+                __list.push_back(this->_list[i]);
+            return __list;
+        }
+
+        QVector<T>	toVector() const{
+            //TODO
+        }
+        
         T value(int i) const{
-            //TODO
+            if (0 <= i < this->size())
+                return this->_list[i];
+            return value_type();
         }
         
-        T value(int i, const T & defaultValue) const{
-            //TODO
+        T value(int i, const T& defaultValue) const{
+            if (0 <= i < this->size())
+                return this->_list[i];
+            return defaultValue;
         }
         
         size_type size() const {
@@ -518,8 +482,7 @@ namespace std {
                 return true;
             return false;
         }
-        
-        
+        /*
         size_type max_size() const {
             return this->_size;
         }
@@ -532,13 +495,45 @@ namespace std {
             }
             this->_size = sz;
         }
+        */
+        
+        bool isEmpty() const{
+            if (this->_size == 0)
+                return true;
+            return false;
+        }
         
         T& back() {
             __ESBMC_assert(!empty(),
                            "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
             return this->_list[this->_size-1];
         }
+        
+        const T& back() const{
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
+            return this->_list[this->_size-1];
+        }
+        
+        T& last() {
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
+            return this->_list[this->_size-1];
+        }
+        
+        const T& last() const{
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
+            return this->_list[this->_size-1];
+        }
+        
         T& front() {
+            __ESBMC_assert(!empty(),
+                           "  This method returns a reference to the first element in the list container.\n  Therefore, the list can't be empty.\n");
+            return this->_list[0];
+        }
+        
+        const T& front() const {
             __ESBMC_assert(!empty(),
                            "  This method returns a reference to the first element in the list container.\n  Therefore, the list can't be empty.\n");
             return this->_list[0];
@@ -587,6 +582,25 @@ namespace std {
             return position;
         }
         
+        void insert(int position, const value_type& x) {
+            for(int i = position; i < this->_size; i++){
+                this->_list[i + 1] = this->_list[i];
+            }
+            this->_list[position] = x;
+            this->_size++;
+        }
+        
+        int lastIndexOf(const T& value, int from = -1) const{
+            //__ESBMC_assert(from < -1 && from >= this->_size, "Position invalid.");
+            if (from == -1)
+                from = this->_size;
+            for (int i = from; i > -1; i--)
+                if (this->_list[i] == value)
+                    return i;
+            return -1;
+        }
+        
+        /*
         void insert(iterator& position, size_type n, const value_type& x) {
             __ESBMC_assert(n >= 0,
                            "The second parameter must be greater or equal than zero.");
@@ -601,16 +615,17 @@ namespace std {
         void assign(iterator first, iterator last) {
             __ESBMC_assert(first.it != NULL,
                            "The first parameter must be different than NULL.");
-            *this = list(first,last);
+            *this = QList(first,last);
         }
         
         void assign(value_type* first, value_type* last) {
-            *this = list(first, last);
+            *this = QList(first, last);
         }
         
         void assign(size_type n, const value_type& u) {
-            *this = list(n, u);
+            *this = QList(n, u);
         }
+        */
         
         iterator& erase(iterator& position) {
             this->_size--;
@@ -629,8 +644,8 @@ namespace std {
             return last;
         }
         
-        void swap(list<value_type>& x) {
-            list<value_type> _tmp;
+        void swap(QList<value_type>& x) {
+            QList<value_type> _tmp;
             for(int i = 0; i < this->_size; i++)
                 _tmp._list[i] = this->_list[i];
             _tmp._size = this->_size;
@@ -645,10 +660,10 @@ namespace std {
         }
         
         void clear() {
-            this->~list();
+            this->~QList();
         }
-        
-        void splice(iterator& position, list<value_type>& x) {
+        /*
+        void splice(iterator& position, QList<value_type>& x) {
             size_type _tmp = x._size;
             for(int i = 0; i < _tmp;i++){
                 this->insert(position,x.front());
@@ -657,12 +672,12 @@ namespace std {
             x.clear();
         }
         
-        void splice(iterator& position, list<value_type>& x, iterator i) {
+        void splice(iterator& position, QList<value_type>& x, iterator i) {
             this->insert(position,*i.it);
             x.erase(i);
         }
         
-        void splice(iterator& position, list<value_type>& x, iterator& first, iterator& last) {
+        void splice(iterator& position, QList<value_type>& x, iterator& first, iterator& last) {
             if(last.pos == x._size)
                 last--;
             for(;first.pos != last.pos;last--){
@@ -759,7 +774,7 @@ namespace std {
             }
         }
         
-        void merge(list<value_type>& x) {
+        void merge(QList<value_type>& x) {
             for(int i = 0; i < x._size; i++){
                 this->push_back(x._list[i]);
             }
@@ -767,10 +782,10 @@ namespace std {
             x.clear();
         }
         
-        void merge(list<value_type>& x, pred_double* pred) {
+        void merge(QList<value_type>& x, pred_double* pred) {
             __ESBMC_assert(pred != NULL,
                            "The second parameter must be different than NULL.");
-            list _tmp;
+            QList _tmp;
             size_type i;
             for(i = 0; (i < this->_size) && (i < x._size) ; i++){
                 if(pred(this->_list[i],x._list[i])){
@@ -814,88 +829,102 @@ namespace std {
         }
         
         void reverse() {
-            list<value_type> _tmp;
+            QList<value_type> _tmp;
             for(int i = 0; i < this->_size; i++){
                 _tmp.push_front(this->_list[i]);
             }
             for(int i = 0; i < _tmp._size; i++)
                 this->_list[i] = _tmp._list[i];
         }
+        */
         
-        bool operator==(const list<T>& y) {
-            if (this->_size != y._size)
-                return false;
+        bool operator==(const QList<T>& other) {
+            if (this->_size == other._size)
+                return true;
             //TODO
             //for(int i = 0; i <  this->_size; i++)
             //	if(this->_list[i] != y._list[i])
             //		return false;
-            return true;
+            return false;
         }
         
-        bool operator!=(const list<T>& y) {
-            if (this->_size == y._size)
-                return false;
+        bool operator!=(const QList<T>& other) {
+            if (this->_size != other._size)
+                return true;
             //TODO
             //for(int i = 0; i <  this->_size; i++)
             //	if(this->_list[i] != y._list[i])
             //		return false;
-            return true;
+            return false;
         }
         
-        list<T>& operator<<(const T& value){
+        QList<T> operator+(const QList<T>& other) {
+            QList<T> _tmp;
+            int i = 0;
+            for (; i < this->_size; i++)
+                _tmp._list[i] = this->_list[i];
+            for (int j = 0; j < other._size; j++, i++) {
+                _tmp._list[i] = other._list[j];
+            }
+            return _tmp;
+        }
+        
+        QList<T>& operator+=(const QList<T> & other) {
+            int i = this->_size;
+            for (int j = 0; j < other._size; j++, i++) {
+                this->push_back(other._list[j]);
+            }
+            return *this;
+        }
+        
+        QList<T>& operator+=(const T & value) {
             this->push_back(value);
             return *this;
         }
+        
+        QList<T>& operator<<(const QList<T> & other) {
+            for (int i = 0; i < other._size; i++)
+                this->push_back(other._list[i]);
+            return *this;
+        }
+        
+        QList<T>& operator<<(const T& value) {
+            this->push_back(value);
+            return *this;
+        }
+        
+        QList<T>& operator=(const QList<T> & other) {
+            this->clear();
+            for (int i = 0; i < other._size; i++)
+                this->push_back(other._list[i]);
+            return *this;
+        }
+        
+        //bool operator=(QList<T> && other) {
+            //TODO
+        //}
+        
+        T& operator[](int i) {
+            __ESBMC_assert( i >= 0 && i < this->_size, "Position invalid.");
+            return this->_list[i];
+        }
+        
+        const T& operator[](int i) const {
+            __ESBMC_assert( i >= 0 && i < this->_size, "Position invalid.");
+            return this->_list[i];
+        }
+        
+        static QList<T> fromSet(const QSet<T> & set){
+            //TODO
+        }
+        
+        static QList<T> fromStdList(const std::list<T>& list){
+            //TODO
+        }
+        
+        static QList<T> fromVector(const QVector<T> & vector){
+            //TODO
+        }
+        
     };
-    /*
-     void advance(list<unsigned int>::iterator& it, int n) {
-     __ESBMC_assert(it.it != NULL,
-     "The first parameter must be different than NULL.");
-     __ESBMC_assert(n > 0, "The second parameter must be greater than zero.");
-     it.pos = it.pos + n;
-     it.it = it.it+n;
-     }
-     */
-    void advance(list<int>::iterator& it, int n) {
-        __ESBMC_assert(it.it != NULL,
-                       "The first parameter must be different than NULL.");
-        __ESBMC_assert(n > 0, "The second parameter must be greater than zero.");
-        it.pos = it.pos + n;
-        it.it = it.it+n;
-    }
-    
-    bool operator==(const list<int>& x, const list<int>& y) {
-        if (x._size != y._size)
-            return false;
-        for(int i = 0; i <  x._size; i++)
-            if(x._list[i] != y._list[i])
-                return false;
-        return true;
-    }
-    
-    bool operator!=(const list<int>& x, const list<int>& y) {
-        if (x._size != y._size)
-            return true;
-        for(int i = 0; i <  x._size; i++)
-            if(x._list[i] != y._list[i])
-                return true;
-        return false;
-    }
-    bool operator==(const list<double>& x, const list<double>& y) {
-        if (x._size != y._size)
-            return false;
-        for(int i = 0; i <  x._size; i++)
-            if(x._list[i] != y._list[i])
-                return false;
-        return true;
-    }
-    bool operator!=(const list<double>& x, const list<double>& y) {
-        if (x._size != y._size)
-            return true;
-        for(int i = 0; i <  x._size; i++)
-            if(x._list[i] != y._list[i])
-                return true;
-        return false;
-    }
 #endif
-}
