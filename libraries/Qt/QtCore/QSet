@@ -351,7 +351,7 @@ public:
 	iterator upper_bound(const key_type& x) {
 		int first = 0, last = _size;
 		last--;
-		int y;
+		value_type y;
 		while(first != last)
 		{
 			y = buf[first];
@@ -363,7 +363,7 @@ public:
 	const_iterator upper_bound(const key_type& x) const {
 		int first = 0, last = _size;
 		last--;
-		int y;
+		value_type y;
 		while(first != last)
 		{
 			y = buf[first];
