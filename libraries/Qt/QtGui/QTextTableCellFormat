@@ -1,0 +1,15 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+
+class QTextTableCellFormat {
+public:
+	QTextTableCellFormat();
+	~QTextTableCellFormat();
+};
