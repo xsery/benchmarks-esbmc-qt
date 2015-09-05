@@ -7,9 +7,52 @@ Author: Mário Angel
 Date: 
 
 \*******************************************************************/
+#include "QtDefines.h"
+#include <pthread.h>
+#define NUM_THREADS 10
+
+unsigned long int threads_id[10]; //Stores the threads id
+int iThreads = 0; //counter for phtread_create
+int iRet = 0;
+
+//TODO criar um ponteiro de função
+void *run( void *args);
 
 class QThread {
 public:
 	QThread();
+
 	~QThread();
+
+	enum Priority
+        {
+          IdlePriority,
+          LowestPriority,
+          LowPriority,
+          NormalPriority,
+          HighPriority,
+          HighestPriority,
+
+          TimeCriticalPriority,
+
+          InheritPriority
+    	};
+
+        //virtual void *run();
+	void start(Priority = InheritPriority)
+	{
+	  
+          iRet = pthread_create(&threads_id[iThreads], NULL, run, NULL);
+	  __ESBMC_assert(iRet == 0,"ERROR; pthread_create failed");
+          
+	  iThreads++;
+          if( 10 == iThreads )
+	  {
+            iThreads = 0;
+	  }
+      		
+	}
+
+	bool wait(unsigned long time = ULONG_MAX);
+
 };

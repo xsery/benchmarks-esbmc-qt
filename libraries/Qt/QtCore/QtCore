@@ -1,3 +1,6 @@
+#include "QtDefines.h"
+#include "QThread"
+
 void qWarning ( const char * msg, ... ){}
 
 class QEvent {
