@@ -11,12 +11,15 @@
 #ifndef STL_QQueue
 #define STL_QQueue
 
+#include"QList"
+
 #define QQueue_CAPACITY 1000
 
 namespace std
 {
     
-    template<class T> class QQueue
+    template<class T>
+    class QQueue : public QList<T>
     {
         T buf[QQueue_CAPACITY];
         int _size=0;
@@ -26,11 +29,15 @@ namespace std
     public:
         
         QQueue():_size(0), front(0), tail(0){}
-        ~QQueue(){}
+        ~QQueue(){
+            this->_size = 0;
+            this->front = 0;
+            this->tail = 0;
+        }
         
         void enqueue ( const T& t )
         {
-            assert(0 <= _size);
+            __ESBMC_assert(0 <= _size);
             __ESBMC_assert(_size < QQueue_CAPACITY, "QQueue overflow");
             buf[tail] = t;
             _size++;
@@ -54,6 +61,12 @@ namespace std
             return buf[front];
         }
         
+        const T& head () const
+        {
+            assert(!isEmpty());
+            return buf[front];
+        }
+        
         int size() const
         {
             assert(0 <= _size && _size <= QQueue_CAPACITY);
@@ -69,7 +82,7 @@ namespace std
             else
                 front++;
         }
-        
+    
         T& back ()
         {
             assert(!isEmpty());
