@@ -14,8 +14,13 @@ int main ()
   for (i=1; i<10; i++) myQLinkedList.push_back(i*10);
 
                                // 10 20 30 40 50 60 70 80 90
-  it1 = it2 = myQLinkedList.begin(); // ^^
-  advance (it2,6);             // ^                 ^
+    it1 = it2 = myQLinkedList.begin(); // ^^
+    it2++;
+    it2++;
+    it2++;
+    it2++;
+    it2++;
+    it2++;
   assert(*it2 == 70);
   ++it1;                       //    ^              ^
 
