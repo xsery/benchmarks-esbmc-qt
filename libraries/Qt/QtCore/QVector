@@ -1,34 +1,536 @@
 /*******************************************************************\
+Module: Qt
 
+Author: Felipe Monteiro
 
-Author: Felipe Rodrigues
-
-
+Date: June 2015
+ 
 \*******************************************************************/
 
-//#include "vector"
+#ifndef __QVECTOR
+#define __QVECTOR
 
-//#define QVector std::vector
+//#include"../../definitions.h"
+#include"QList"
+#include"../../vector"
 
-#if 1
+#define VECTOR_MAX_SIZE 50
+
 template<class T> class QVector
 {
-T vec[50];
-int _size;
-int last;
 public:
-	QVector (){
-this->_size = 0;
-this->last = -1;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef unsigned int size_type;
+    typedef int difference_type;
+    typedef T value_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    
+    typedef bool (pred_double)(T, T);
+    typedef bool (pred)(T &);
+    
+    value_type _qvector[VECTOR_MAX_SIZE];
+    size_type _size;
+    
+    class iterator {
+    public:
+        value_type* it;
+        size_type pos;
+        
+        iterator(const iterator& x){
+            this->it = x.it;
+            this->pos = x.pos;
+        }
+        iterator(){}
+        iterator& operator=(const iterator& x) {
+            this->it = x.it;
+            this->pos = x.pos;
+            return *this;
+        }
+        
+        T* operator ->() {
+            return this->it;
+        }
+        
+        T operator *() {
+            return *this->it;
+        }
+        
+        iterator operator ++() {
+            this->it++;
+            this->pos++;
+            return *this;
+        }
+        iterator operator ++(int) {
+            this->it++;
+            this->pos++;
+            return *this;
+        }
+        
+        iterator operator --() {
+            this->it--;
+            this->pos--;
+            return *this;
+        }
+        iterator operator --(int) {
+            this->it--;
+            this->pos--;
+            return *this;
+        }
+        
+        bool operator ==(const iterator& x) const {
+            if(this->it != x.it)
+                return false;
+            return true;
+        }
+        
+        bool operator !=(const iterator& x) const {
+            if(this->it == x.it)
+                return false;
+            return true;
+        }
+    };
+    
+    typedef iterator Iterator; //OK
+    
+    class const_iterator { //OK
+    public:
+        value_type* it;
+        size_type pos;
+        
+        const_iterator(const const_iterator& x){
+            this->it = x.it;
+            this->pos = x.pos;
+        }
+        const_iterator(){}
+        const_iterator& operator=(const const_iterator& x) {
+            this->it = x.it;
+            this->pos = x.pos;
+            return *this;
+        }
+        
+        T* operator ->() {
+            return this->it;
+        }
+        
+        T operator *() {
+            return *this->it;
+        }
+        
+        const_iterator operator ++() {
+            this->it++;
+            this->pos++;
+            return *this;
+        }
+        const_iterator operator ++(int) {
+            this->it++;
+            this->pos++;
+            return *this;
+        }
+        
+        const_iterator operator --() {
+            this->it--;
+            this->pos--;
+            return *this;
+        }
+        const_iterator operator --(int) {
+            this->it--;
+            this->pos--;
+            return *this;
+        }
+        
+        bool operator ==(const const_iterator& x) const {
+            if(this->it != x.it)
+                return false;
+            return true;
+        }
+        
+        bool operator !=(const const_iterator& x) const {
+            if(this->it == x.it)
+                return false;
+            return true;
+        }
+    };
+    
+    typedef const_iterator ConstIterator; //OK
+    
+    QVector (){
+        this->_size = 0;
     }
-	~QVector (){}
-	int size() const{
-return this->_size;
+    
+    QVector(int __size){
+        __ESBMC_assert(__size >= 0, "Parameter must be greater than zero." );
+        for(int i = 0; i < __size; i++)
+            this->_qvector[i] = value_type();
+        this->_size = __size;
     }
-	void push_back( const T& value ){
-this->last++;
-this->vec[this->last] = value;
-this->_size++;
+    
+    QVector(int __size, const T& value){
+        __ESBMC_assert(__size >= 0, "Parameter must be greater than zero." );
+        for(int i = 0; i < __size; i++)
+            this->_qvector[i] = value;
+        this->_size = __size;
+    }
+    
+    QVector(const QVector<T> & other){
+        this->_size = other._size;
+        this->_qvector = other._qvector;
+    }
+    
+    QVector(QVector<T> && other){
+        //TODO
+    }
+    
+    //QVector(std::initializer_list<T> args){
+        //C++11
+    //}
+    
+    ~QVector (){
+        for (int i = 0; i < this->_size; i++)
+            this->_qvector[i] = value_type();
+        this->_size = 0;
+    }
+    
+    void	append(const T & value){
+        this->push_back(value);
+    }
+    void	append(const QVector<T> & value){
+        size_type _s = 0;
+        this->clear();
+        for(int i = 0; i < _s; i++){
+            this->_qvector[i] = value._qvector[i];
+        }
+        this->_size = value._size;
+    }
+    
+    const T& at(int i) const{
+        __ESBMC_assert(i >= 0 && i < this->_size, "Parameter invalid");
+        return this->_qvector[i];
+    }
+    
+    reference	back(){
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[this->_size - 1];
+    }
+    
+    const_reference	back() const{
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[this->_size - 1];
+    }
+    
+    iterator& begin() {
+        iterator it;
+        it.it = &(this->_qvector[0]);
+        it.pos = 0;
+        return it;
+    }
+    
+    const_iterator& begin() const {
+        const_iterator it;
+        it.it = &(this->_qvector[0]);
+        it.pos = 0;
+        return it;
+    }
+    
+    int	capacity() const{
+        //TODO
+    }
+    
+    const_iterator	cbegin() const{
+        const_iterator it;
+        it.it = &(this->_qvector[0]);
+        it.pos = 0;
+        return it;
+    }
+    
+    const_iterator cend() const{
+        const_iterator it;
+        this->_qvector[this->_size] = value_type();
+        it.it = &(this->_qvector[this->_size]);
+        it.pos = this->_size;
+        return it;
+    }
+    
+    void	clear(){
+        for (int i = 0; i < this->_size; i++)
+            this->_qvector[i] = value_type();
+        this->_size = 0;
+    }
+    
+    const_iterator constBegin() const{
+        const_iterator it;
+        it.it = &(this->_qvector[0]);
+        it.pos = 0;
+        return it;
+    }
+    
+    const T *	constData() const{
+        //TODO
+    }
+    
+    const_iterator constEnd() const{
+        const_iterator it;
+        this->_qvector[this->_size] = value_type();
+        it.it = &(this->_qvector[this->_size]);
+        it.pos = this->_size;
+        return it;
+    }
+    
+    bool contains(const T & value) const{
+        for (int i = 0; i < this->_size; i++)
+            if (this->_qvector[i] == value)
+                return true;
+        return false;
+    }
+    
+    int	count(const T & value) const{
+        int accum = 0;
+        for (int i = 0; i < this->_size; i++)
+            if (this->_qvector[i] == value)
+                accum++;
+        return accum;
+    }
+    
+    int	count() const{
+        return this->_size;
+    }
+    
+    T *	data(){
+        //TODO
+    }
+    const T *	data() const{
+        //TODO
+    }
+    bool	empty() const{
+        if (this->_size == 0)
+            return true;
+        return false;
+    }
+    
+    iterator& end() {
+        iterator it;
+        this->_qvector[this->_size] = value_type();
+        it.it = &(this->_qvector[this->_size]);
+        it.pos = this->_size;
+        return it;
+    }
+    
+    const_iterator& end() const {
+        const_iterator it;
+        this->_qvector[this->_size] = value_type();
+        it.it = &(this->_qvector[this->_size]);
+        it.pos = this->_size;
+        return it;
+    }
+    
+    bool	endsWith(const T & value) const{
+        if (!(this->empty()) & this->_qvector[this->_size - 1] == value)
+            return true;
+        return false;
+    }
+    iterator	erase(iterator pos){
+        //TODO
+    }
+    iterator	erase(iterator begin, iterator end){
+        //TODO
+    }
+    QVector<T> &	fill(const T & value, int size = -1){
+        //TODO
+    }
+    
+    T &	first(){
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[0];
+    }
+    
+    const T &	first() const{
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[0];
+    }
+    
+    T &	front(){
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[0];
+    }
+    
+    const_reference	front() const{
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[0];
+    }
+    
+    int	indexOf(const T & value, int from = 0) const{
+        //TODO
+    }
+    void	insert(int i, const T & value){
+        //TODO
+    }
+    iterator	insert(iterator before, int count, const T & value){
+        //TODO
+    }
+    void	insert(int i, int count, const T & value){
+        //TODO
+    }
+    iterator	insert(iterator before, const T & value){
+        //TODO
+    }
+    bool	isEmpty() const{
+        if (this->_size == 0)
+            return true;
+        return false;
+    }
+    T &	last(){
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[this->_size - 1];
+    }
+    const T &	last() const{
+        __ESBMC_assert(this->_size != 0, "Container is empty!");
+        return this->_qvector[this->_size - 1];
+    }
+    int	lastIndexOf(const T & value, int from = -1) const{
+        //TODO
+    }
+    
+    int	length() const{
+        return this->_size;
+    }
+    
+    QVector<T>	mid(int pos, int length = -1) const{
+        //TODO
+    }
+    
+    void	pop_back(){
+        __ESBMC_assert(!empty(),
+                       "\n  This method removes the last element in the list container.\n  Therefore, the list can't be empty.\n");
+        this->_qvector[this->_size -1] = value_type();
+        this->_size--;
+    }
+    
+    void	pop_front(){
+        __ESBMC_assert(!this->empty(),
+                       "\n  This method removes the first element in the list container.\n  Therefore, the list can't be empty.\n");
+        this->_size--;
+        for(int i = 0; i < this->_size; i++){
+            this->_qvector[i] = this->_qvector[i+1];
+        }
+        this->_qvector[this->_size + 1] = value_type();
+    }
+    
+    void	prepend(const T & value){
+        //TODO
+    }
+    
+    void push_back( const T& value ){
+        this->_qvector[this->_size] = value;
+        this->_size++;
+    }
+    
+    void	push_front(const T & value){
+        if (this->_size != 0) {
+            for(int i = this->_size -1; i > -1; i--){
+                this->_qvector[i+1] = this->_qvector[i];
+            }
+        }
+        this->_qvector[0] = x;
+        this->_size++;
+    }
+    void	remove(int i){
+        //TODO
+    }
+    void	remove(int i, int count){
+        //TODO
+    }
+    int	removeAll(const T & t){
+        //TODO
+    }
+    void	removeAt(int i){
+        //TODO
+    }
+    void	removeFirst(){
+        //TODO
+    }
+    void	removeLast(){
+        //TODO
+    }
+    bool	removeOne(const T & t){
+        //TODO
+    }
+    void	replace(int i, const T & value){
+        //TODO
+    }
+    void	reserve(int size){
+        //TODO
+    }
+    void	resize(int size){
+        //TODO
+    }
+    
+    int size() const{
+        return this->_size;
+    }
+    
+    void	squeeze(){
+        //TODO
+    }
+    bool	startsWith(const T & value) const{
+        //TODO
+    }
+    void	swap(QVector<T> & other){
+        //TODO
+    }
+    T	takeAt(int i){
+        //TODO
+    }
+    T	takeFirst(){
+        //TODO
+    }
+    T	takeLast(){
+        //TODO
+    }
+    QList<T> toList() const{
+        //TODO
+    }
+    std::vector<T>	toStdVector() const{
+        //TODO
+    }
+    T	value(int i) const{
+        //TODO
+    }
+    T	value(int i, const T & defaultValue) const{
+        //TODO
+    }
+    bool	operator!=(const QVector<T> & other) const{
+        //TODO
+    }
+    QVector<T>	operator+(const QVector<T> & other) const{
+        //TODO
+    }
+    QVector<T> &	operator+=(const QVector<T> & other){
+        //TODO
+    }
+    QVector<T> &	operator+=(const T & value){
+        //TODO
+    }
+    QVector<T> &	operator<<(const T & value){
+        //TODO
+    }
+    QVector<T> &	operator<<(const QVector<T> & other){
+        //TODO
+    }
+    QVector<T> &	operator=(const QVector<T> & other){
+        //TODO
+    }
+    QVector<T>	operator=(QVector<T> && other){
+        //TODO
+    }
+    bool	operator==(const QVector<T> & other) const{
+        //TODO
+    }
+    T &	operator[](int i){
+        //TODO
+    }
+    const T &	operator[](int i) const{
+        //TODO
     }
 };
 #endif
