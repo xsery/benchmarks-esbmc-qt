@@ -6,9 +6,12 @@ using namespace std;
 
 int main ()
 {
-  int myints[] = {75,23,65,42,13};
-  QLinkedList<int> myQLinkedList (myints,myints+5);
-
+    QLinkedList<int> myQLinkedList;
+    myQLinkedList.push_back(75);
+    myQLinkedList.push_back(23);
+    myQLinkedList.push_back(65);
+    myQLinkedList.push_back(42);
+    myQLinkedList.push_back(13);
   QLinkedList<int>::iterator it;
   it = myQLinkedList.end();
   it--;
