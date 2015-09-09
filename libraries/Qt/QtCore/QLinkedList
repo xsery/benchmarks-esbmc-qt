@@ -1,597 +1,662 @@
 /*******************************************************************
- Module:
+ Module: Qt
 
- Author: Felipe Rodrigues
+ Author: Felipe Monteiro
 
- Date: October 2012
+ Date: June 2015
 
  \*******************************************************************/
 
-#ifndef __STL_LIST
-#define __STL_LIST
-
-#define list QLinkedList
+#ifndef __STL_QLINKEDLIST
+#define __STL_QLINKEDLIST
 
 #include "../../definitions.h"
-
-#define LIST_MAX_SIZE 20
-
-namespace std {
-
-template<class T>
-class list {
-public:
-	typedef T& reference;
-	typedef const T& const_reference;
-	typedef unsigned int size_type;
-	typedef int difference_type;
-	typedef T value_type;
-	typedef T* pointer;
-	typedef const T* const_pointer;
-
-	typedef bool (pred_double)(T, T);
-	typedef bool (pred)(T &);
-
-	value_type _list[LIST_MAX_SIZE];
-	size_type _size;
-
-	class iterator {
-	public:
-		value_type* it;
-		size_type pos;
-
-		iterator(const iterator& x){
-			this->it = x.it;
-			this->pos = x.pos;
-		}
-		iterator(){}
-		iterator& operator=(const iterator& x) {
-			this->it = x.it;
-			this->pos = x.pos;
-			return *this;
-		}
-
-		T* operator ->() {
-			return this->it;
-		}
-
-		T operator *() {
-			return *this->it;
-		}
-
-		iterator operator ++() {
-			this->it++;
-			this->pos++;
-			return *this;
-		}
-		iterator operator ++(int) {
-			this->it++;
-			this->pos++;
-			return *this;
-		}
-
-		iterator operator --() {
-			this->it--;
-			this->pos--;
-			return *this;
-		}
-		iterator operator --(int) {
-			this->it--;
-			this->pos--;
-			return *this;
-		}
-
-		bool operator ==(const iterator& x) const {
-			if(this->it != x.it)
-				return false;
-			return true;
-		}
-
-		bool operator !=(const iterator& x) const {
-			if(this->it == x.it)
-				return false;
-			return true;
-		}
-	};
-
-	class reverse_iterator {
-	public:
-		value_type* it;
-		size_type pos;
-
-		reverse_iterator(const reverse_iterator& x){
-			this->it = x.it;
-			this->pos = x.pos;
-		}
-		reverse_iterator(){}
-		reverse_iterator& operator=(const reverse_iterator& x) {
-			this->it = x.it;
-			this->pos = x.pos;
-			return *this;
-		}
-
-		T* operator ->() {
-			return this->it;
-		}
-
-		T operator *() {
-			return *this->it;
-		}
-
-		reverse_iterator operator ++() {
-			this->it++;
-			this->pos++;
-			return *this;
-		}
-		reverse_iterator operator ++(int) {
-			this->it++;
-			this->pos++;
-			return *this;
-		}
-
-		reverse_iterator operator --() {
-			//todo
-			return *this;
-		}
-		reverse_iterator operator --(int) {
-			//todo
-			return *this;
-		}
-
-		bool operator ==(const reverse_iterator& x) const {
-			if(this->it != x.it)
-				return false;
-			return true;
-		}
-
-		bool operator !=(const reverse_iterator& x) const {
-			if(this->it == x.it)
-				return false;
-			return true;
-		}
-	};
-
-	list(){
-		this->_size = 0;
-	}
-
-	list(size_type n, const value_type& value = value_type()) {
-		__ESBMC_assert(n > 0,
-				"  In the first parameter is specified the container size,\n  therefore, this parameter must be greater than zero.\n");
-		for(int i = 0; i < n; i++){
-			this->_list[i] = value;
-		}
-		this->_size = n;
-	}
-
-	list(value_type* t1, value_type* t2) {
-		__ESBMC_assert(t1 != NULL,
-				"\n  In the first parameter is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
-		__ESBMC_assert(t2 != NULL,
-				"\n  In the second parameter (last) is specified the pointer to final of the range,\n  therefore, this parameter must be different than NULL.\n");
-	int i;
-	for(i = 0; t1 != t2; i++){
-		this->_list[i] = *t1;
-		t1++;
-	}
-	this->_size = i;
-	}
-
-	list(iterator first, iterator last) {
-		__ESBMC_assert(first.it != NULL,
-				"\n  In the first parameter (first) is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
-		int i;
-		for(i = 0; first.it != last.it; first++, i++){
-			this->_list[i] = *(first.it);
-		}
-		this->_size = i;
-	}
-
-	list(const list<T>& x) {
-		for(int i = 0; i < x._size; i++)
-			this->_list[i] = x._list[i];
-		this->_size = x._size;
-	}
-
-	~list() {
-		for(int i = 0; i < this->_size; i++){
-			this->_list[i] = T();
-		}
-		this->_size = 0;
-	}
-
-	int indexOf (T value, int from = 0) { return 0; }
-
-	iterator& begin() {
-		iterator it;
-		it.it = &(this->_list[0]);
-		it.pos = 0;
-		return it;
-	}
-	iterator& end() {
-		iterator it;
-		this->_list[this->_size] = value_type();
-		it.it = &(this->_list[this->_size]);
-		it.pos = this->_size;
-		return it;
-	}
-	reverse_iterator rbegin() {
-		reverse_iterator rit;
-		rit.it = &(this->_list[this->_size - 1]);
-		rit.pos = this->_size - 1;
-		return rit;
-	}
-	reverse_iterator rend() {
-		reverse_iterator rit;
-		rit.it = &(this->_list[0]);
-		rit.pos = 0;
-		return rit;
-	}
-
-	size_type size() const {
-		return this->_size;
-	}
-
-	bool empty() const {
-		if (this->_size == 0)
-			return true;
-		return false;
-	}
-
-
-	size_type max_size() const {
-		return this->_size;
-	}
-
-	void resize(size_type sz,value_type c = value_type()) {
-		__ESBMC_assert(sz > 0,
-				"\n  In the first parameter (n) is specified the container size,\n  therefore, this parameter must be greater than zero.\n");
-		for(size_type i = this->_size; i < sz; i++){
-			this->_list[i] = c;
-		}
-		this->_size = sz;
-	}
-
-	T& back() {
-		__ESBMC_assert(!empty(),
-				"\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
-		return this->_list[this->_size-1];
-	}
-	T& front() {
-		__ESBMC_assert(!empty(),
-				"  This method returns a reference to the first element in the list container.\n  Therefore, the list can't be empty.\n");
-		return this->_list[0];
-	}
-
-	void pop_front() {
-		__ESBMC_assert(!empty(),
-				"\n  This method removes the first element in the list container.\n  Ttherefore, the list can't be empty.\n");
-		this->_size--;
-		for(int i = 0; i < this->_size; i++){
-			this->_list[i] = this->_list[i+1];
-		}
-		this->_list[this->_size + 1] = value_type();
-	}
-
-	void pop_back() {
-		__ESBMC_assert(!empty(),
-				"\n  This method removes the last element in the list container.\n  Therefore, the list can't be empty.\n");
-		this->_list[this->_size -1] = value_type();
-		this->_size--;
-	}
-
-	void push_back(const value_type& x) {
-		this->_list[this->_size] = x;
-		this->_size++;
-	}
-
-	void push_front(const value_type& x) {
-		if (this->_size != 0) {
-			for(int i = this->_size -1; i > -1; i--){
-				this->_list[i+1] = this->_list[i];
-			}
-		}
-		this->_list[0] = x;
-		this->_size++;
-	}
-
-	iterator insert(iterator& position, const value_type& x) {
-		for(int i = position.pos; i < this->_size; i++){
-			this->_list[i + 1] = this->_list[i];
-		}
-		this->_list[position.pos] = x;
-		this->_size++;
-		position.pos++;
-		position.it = &(this->_list[position.pos]);
-		return position;
-	}
-
-	void insert(iterator& position, size_type n, const value_type& x) {
-		__ESBMC_assert(n >= 0,
-				"The second parameter must be greater or equal than zero.");
-		int i;
-		for (i = 0; i < n; i++) {
-			this->insert(position, x);
-		}
-		position.pos--;
-		position.it = &(this->_list[position.pos]);
-	}
-
-	void assign(iterator first, iterator last) {
-		__ESBMC_assert(first.it != NULL,
-				"The first parameter must be different than NULL.");
-		*this = list(first,last);
-	}
-
-	void assign(value_type* first, value_type* last) {
-		*this = list(first, last);
-	}
-
-	void assign(size_type n, const value_type& u) {
-		*this = list(n, u);
-	}
-
-	iterator& erase(iterator& position) {
-		this->_size--;
-		for(int i = position.pos; i <  this->_size; i++){
-			this->_list[i] = this->_list[i+1];
-		}
-		this->_list[this->_size] = value_type();
-		position.it = &(this->_list[position.pos]);
-		return position;
-	}
-
-	iterator& erase(iterator& position, iterator& last) {
-		while(position.pos != last.pos){
-			this->erase(position);
-		}
-		return last;
-	}
-
-	void swap(list<value_type>& x) {
-		list<value_type> _tmp;
-		for(int i = 0; i < this->_size; i++)
-			_tmp._list[i] = this->_list[i];
-		_tmp._size = this->_size;
-		this->clear();
-		for(int i = 0; i < x._size; i++)
-			this->_list[i] = x._list[i];
-		this->_size = x._size;
-		x.clear();
-		for(int i = 0; i < _tmp._size; i++)
-			x._list[i] = _tmp._list[i];
-		x._size = _tmp._size;
-	}
-
-	void clear() {
-		this->~list();
-	}
-
-	void splice(iterator& position, list<value_type>& x) {
-		size_type _tmp = x._size;
-		for(int i = 0; i < _tmp;i++){
-			this->insert(position,x.front());
-			x.pop_front();
-		}
-		x.clear();
-	}
-
-	void splice(iterator& position, list<value_type>& x, iterator i) {
-		this->insert(position,*i.it);
-		x.erase(i);
-	}
-
-	void splice(iterator& position, list<value_type>& x, iterator& first, iterator& last) {
-		if(last.pos == x._size)
-			last--;
-		for(;first.pos != last.pos;last--){
-			this->insert(position,last.it[last.pos]);
-			x.erase(last);
-		}
-	}
-
-	void remove(const value_type& value) {
-		iterator _itEnd = this->end();
-		for(iterator _it = this->begin(); _it != _itEnd; _it++)
-			if(*_it == value){
-				this->erase(_it);
-				return;
-			}
-	}
-
-	void remove_if(pred* x) {
-		__ESBMC_assert(x != NULL, "The parameter must be different than NULL.");
-		for(iterator _it = this->begin(); _it.pos <= this->_size; _it++)
-			if(x(*_it.it)){
-				this->erase(_it);
-			}
-	}
-
-	template<class Predicate>
-	void remove_if(Predicate* pred) {
-		__ESBMC_assert(pred != NULL,
-				"The parameter must be different than NULL.");
-		for(iterator _it = this->begin(); _it.pos <= this->_size; _it++)
-			if(pred()(*_it.it)){
-				this->erase(_it);
-			}
-	}
-
-
-	void unique() {
-		size_type i;
-		size_type j = 0;
-		size_type _limit = this->_size;
-		value_type _tmp[LIST_MAX_SIZE];
-		for(i = 0; (i+1) < _limit; i++){
-			if(this->_list[i] != this->_list[i+1]){
-				_tmp[j] = this->_list[i];
-				j++;
-			}else{
-				this->_size--;
-			}
-		}
-		_tmp[j] = this->_list[i];
-		for(i = 0; i < this->_size;i++){
-			this->_list[i] = _tmp[i];
-		}
-	}
-
-	void unique(pred_double* x) {
-		__ESBMC_assert(x != NULL, "The parameter must be different than NULL.");
-		size_type i;
-		size_type j = 0;
-		size_type _limit = this->_size;
-		value_type _tmp[LIST_MAX_SIZE];
-		for(i = 0; (i+1) < _limit; i++){
-			if(x(this->_list[i],this->_list[i+1])){
-				_tmp[j] = this->_list[i];
-				j++;
-			}else{
-				this->_size--;
-			}
-		}
-		_tmp[j] = this->_list[i];
-		for(i = 0; i < this->_size;i++){
-			this->_list[i] = _tmp[i];
-		}
-	}
-
-	template<class Predicate>
-	void unique(Predicate pred) {
-		__ESBMC_assert(pred != NULL,
-				"The parameter must be different than NULL.");
-		size_type i;
-		size_type j = 0;
-		size_type _limit = this->_size;
-		value_type _tmp[LIST_MAX_SIZE];
-		for(i = 0; (i+1) < _limit; i++){
-			if(pred(this->_list[i],this->_list[i+1])){
-				_tmp[j] = this->_list[i];
-				j++;
-			}else{
-				this->_size--;
-			}
-		}
-		_tmp[j] = this->_list[i];
-		for(i = 0; i < this->_size;i++){
-			this->_list[i] = _tmp[i];
-		}
-	}
-
-	void merge(list<value_type>& x) {
-		for(int i = 0; i < x._size; i++){
-			this->push_back(x._list[i]);
-		}
-		this->sort();
-		x.clear();
-	}
-
-	void merge(list<value_type>& x, pred_double* pred) {
-		__ESBMC_assert(pred != NULL,
-				"The second parameter must be different than NULL.");
-		list _tmp;
-		size_type i;
-		for(i = 0; (i <  this->_size) && (i < x._size) ; i++){
-			if(pred(this->_list[i],x._list[i])){
-				_tmp.push_back(this->_list[i]);
-				_tmp.push_back(x._list[i]);
-			}else{
-				_tmp.push_back(x._list[i]);
-				_tmp.push_back(this->_list[i]);
-			}
-		}
-		if(i != this->_size){
-			for(;i < this->_size; i++){
-				_tmp.push_back(this->_list[i]);
-			}
-		}
-		if(i != x._size){
-			for(;i < x._size; i++){
-				_tmp.push_back(x._list[i]);
-			}
-		}
-		for(i = 0; i < _tmp._size; i++){
-			this->_list[i] = _tmp._list[i];
-		}
-		this->_size = _tmp._size;
-	}
-
-	void sort() {
-		size_type i, j;
-		value_type _pivo, _tmp;
-		for(i = 0; i < this->_size; i++){
-			_pivo = this->_list[i];
-			for(j = i; j < this->_size; j++){
-				if(this->_list[j] < _pivo){
-					_tmp = _pivo;
-					_pivo = this->_list[j];
-					this->_list[j] = _tmp;
-				}
-			}
-			this->_list[i] = _pivo;
-		}
-	}
-
-	void reverse() {
-		list<value_type> _tmp;
-		for(int i = 0; i < this->_size; i++){
-			_tmp.push_front(this->_list[i]);
-		}
-		for(int i = 0; i < _tmp._size; i++)
-			this->_list[i] = _tmp._list[i];
-	}
-};
-
-void advance(list<unsigned int>::iterator& it, int n) {
-	__ESBMC_assert(it.it != NULL,
-			"The first parameter must be different than NULL.");
-	__ESBMC_assert(n > 0, "The second parameter must be greater than zero.");
-	it.pos = it.pos + n;
-	it.it = it.it+n;
-}
-
-void advance(list<int>::iterator& it, int n) {
-	__ESBMC_assert(it.it != NULL,
-			"The first parameter must be different than NULL.");
-	__ESBMC_assert(n > 0, "The second parameter must be greater than zero.");
-	it.pos = it.pos + n;
-	it.it = it.it+n;
-}
-
-bool operator==(const list<int>& x, const list<int>& y) {
-	if (x._size != y._size)
-		return false;
-	for(int i = 0; i <  x._size; i++)
-		if(x._list[i] != y._list[i])
-			return false;
-	return true;
-}
-
-bool operator!=(const list<int>& x, const list<int>& y) {
-	if (x._size != y._size)
-		return true;
-	for(int i = 0; i <  x._size; i++)
-		if(x._list[i] != y._list[i])
-			return true;
-	return false;
-}
-bool operator==(const list<double>& x, const list<double>& y) {
-	if (x._size != y._size)
-		return false;
-	for(int i = 0; i <  x._size; i++)
-		if(x._list[i] != y._list[i])
-			return false;
-	return true;
-}
-bool operator!=(const list<double>& x, const list<double>& y) {
-	if (x._size != y._size)
-		return true;
-	for(int i = 0; i <  x._size; i++)
-		if(x._list[i] != y._list[i])
-			return true;
-	return false;
-}
+#include "../../list"
+
+#define QLinkedList_MAX_SIZE 20
+
+    template<class T>
+    class QLinkedList {
+    public:
+        typedef T& reference; //OK
+        typedef const T& const_reference; //OK
+        typedef unsigned int size_type; //OK
+        typedef int difference_type; //OK
+        typedef T value_type; //OK
+        typedef T* pointer; //OK
+        typedef const T* const_pointer; //OK
+        
+        typedef bool (pred_double)(T, T);
+        typedef bool (pred)(T &);
+        
+        value_type _QLinkedList[QLinkedList_MAX_SIZE]; //OK
+        size_type _size; //OK
+        
+        class iterator { //OK
+        public:
+            value_type* it;
+            size_type pos;
+            
+            iterator(const iterator& x){
+                this->it = x.it;
+                this->pos = x.pos;
+            }
+            iterator(){}
+            iterator& operator=(const iterator& x) {
+                this->it = x.it;
+                this->pos = x.pos;
+                return *this;
+            }
+            
+            T* operator ->() {
+                return this->it;
+            }
+            
+            T operator *() {
+                return *this->it;
+            }
+            
+            iterator operator ++() {
+                this->it++;
+                this->pos++;
+                return *this;
+            }
+            iterator operator ++(int) {
+                this->it++;
+                this->pos++;
+                return *this;
+            }
+            
+            iterator operator --() {
+                this->it--;
+                this->pos--;
+                return *this;
+            }
+            iterator operator --(int) {
+                this->it--;
+                this->pos--;
+                return *this;
+            }
+            
+            bool operator ==(const iterator& x) const {
+                if(this->it != x.it)
+                    return false;
+                return true;
+            }
+            
+            bool operator !=(const iterator& x) const {
+                if(this->it == x.it)
+                    return false;
+                return true;
+            }
+        };
+        
+        typedef iterator Iterator; //OK
+        
+        class const_iterator { //OK
+        public:
+            value_type* it;
+            size_type pos;
+            
+            const_iterator(const const_iterator& x){
+                this->it = x.it;
+                this->pos = x.pos;
+            }
+            const_iterator(){}
+            const_iterator& operator=(const const_iterator& x) {
+                this->it = x.it;
+                this->pos = x.pos;
+                return *this;
+            }
+            
+            T* operator ->() {
+                return this->it;
+            }
+            
+            T operator *() {
+                return *this->it;
+            }
+            
+            const_iterator operator ++() {
+                this->it++;
+                this->pos++;
+                return *this;
+            }
+            const_iterator operator ++(int) {
+                this->it++;
+                this->pos++;
+                return *this;
+            }
+            
+            const_iterator operator --() {
+                this->it--;
+                this->pos--;
+                return *this;
+            }
+            const_iterator operator --(int) {
+                this->it--;
+                this->pos--;
+                return *this;
+            }
+            
+            bool operator ==(const const_iterator& x) const {
+                if(this->it != x.it)
+                    return false;
+                return true;
+            }
+            
+            bool operator !=(const const_iterator& x) const {
+                if(this->it == x.it)
+                    return false;
+                return true;
+            }
+        };
+        
+        typedef const_iterator ConstIterator; //OK
+        
+        QLinkedList(){ //OK
+            this->_size = 0;
+        }
+        QLinkedList(const QLinkedList<T>& x) { //OK
+            for(int i = 0; i < x._size; i++)
+                this->_QLinkedList[i] = x._QLinkedList[i];
+            this->_size = x._size;
+        }
+        
+        QLinkedList( QLinkedList<T> && other ){
+            //TODO
+        }
+        
+        ~QLinkedList() { //OK
+            for(int i = 0; i < this->_size; i++){
+                this->_QLinkedList[i] = T();
+            }
+            this->_size = 0;
+        }
+        
+        void append(const T& value){
+            this->push_back(value);
+        }
+        
+        void append(const QLinkedList<T>& value){
+            size_type _s = 0;
+            this->clear();
+            for(int i = 0; i < _s; i++){
+                this->_QLinkedList[i] = value._QLinkedList[i];
+            }
+            this->_size = value._size;
+        }
+        
+        const T& at(int i) const{
+            __ESBMC_assert(i >= 0 && i < this->_size, "Invalid parameter");
+            return this->_QLinkedList[i];
+        }
+        
+        int indexOf (T value, int from = 0){
+            for (int i = from; i < this->_size; i++) {
+                if (this->_QLinkedList[i] == value) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        iterator& begin() {
+            iterator it;
+            it.it = &(this->_QLinkedList[0]);
+            it.pos = 0;
+            return it;
+        }
+        
+        const_iterator& begin() const {
+            const_iterator it;
+            it.it = &(this->_QLinkedList[0]);
+            it.pos = 0;
+            return it;
+        }
+        
+        const_iterator	cbegin() const{
+            const_iterator it;
+            it.it = &(this->_QLinkedList[0]);
+            it.pos = 0;
+            return it;
+        }
+        
+        iterator& end() {
+            iterator it;
+            this->_QLinkedList[this->_size] = value_type();
+            it.it = &(this->_QLinkedList[this->_size]);
+            it.pos = this->_size;
+            return it;
+        }
+        
+        const_iterator& end() const {
+            const_iterator it;
+            this->_QLinkedList[this->_size] = value_type();
+            it.it = &(this->_QLinkedList[this->_size]);
+            it.pos = this->_size;
+            return it;
+        }
+        
+        const_iterator cend() const{
+            const_iterator it;
+            this->_QLinkedList[this->_size] = value_type();
+            it.it = &(this->_QLinkedList[this->_size]);
+            it.pos = this->_size;
+            return it;
+        }
+        
+        const_iterator constBegin() const{
+            const_iterator it;
+            it.it = &(this->_QLinkedList[0]);
+            it.pos = 0;
+            return it;
+        }
+        
+        const_iterator constEnd() const{
+            const_iterator it;
+            this->_QLinkedList[this->_size] = value_type();
+            it.it = &(this->_QLinkedList[this->_size]);
+            it.pos = this->_size;
+            return it;
+        }
+        
+        bool contains(const T & value) const{
+            for (int i = 0; i < this->_size; i++)
+                if (this->_QLinkedList[i] == value)
+                    return true;
+            return false;
+        }
+        
+        int	count(const T & value) const{
+            int accum = 0;
+            for (int i = 0; i < this->_size; i++)
+                if (this->_QLinkedList[i] == value)
+                    accum++;
+            return accum;
+        }
+        
+        int	count() const{
+            return this->_size;
+        }
+        
+        bool endsWith(const T& value) const{
+            if (!(this->empty()) & this->_QLinkedList[this->_size - 1] == value)
+                return true;
+            return false;
+        }
+        
+        T& first(){
+            return this->front();
+        }
+        
+        const T& first() const{
+            return this->_QLinkedList[0];
+        }
+        
+        int	length() const{
+            return this->_size;
+        }
+        
+        QLinkedList<T> mid(int pos, int length = -1) const{
+            __ESBMC_assert(pos >= 0 & pos < this->_size,"Position invalid.");
+            __ESBMC_assert(length >= 0 & length <= this->_size,"Position invalid.");
+            QLinkedList<T> __newQLinkedList;
+            if (length == -1) {
+                length = this->_size;
+            }
+            for (int i = pos; i < length; i++) {
+                __newQLinkedList._QLinkedList[i] = this->_QLinkedList[i];
+            }
+            return __newQLinkedList;
+        }
+        
+        void move(int from, int to){
+            __ESBMC_assert(from >= 0 && from < this->_size, "First position invalid.");
+            __ESBMC_assert(to >= 0 && to < this->_size, "Second position invalid.");
+            value_type x = this->_QLinkedList[from];
+            if (from != to) {
+                if (from < to) {
+                    for (int i = from; i < to; i++) {
+                        this->_QLinkedList[i] = this->_QLinkedList[i+1];
+                    }
+                } else {
+                    for (int i = to; i < from; i++) {
+                        this->_QLinkedList[i] = this->_QLinkedList[i+1];
+                    }
+                }
+                this->_QLinkedList[to] = x;
+            }
+        }
+        
+        void prepend(const T & value){
+            this->_insert(this->begin(),value);
+        }
+        
+        int	removeAll(const T & value){
+            int j = 0;
+            for (int i = 0 ; i < this->_size; i++)
+                if (this->_QLinkedList[i] == value)
+                    this->removeAt(i);
+            return j;
+        }
+        
+        void removeAt(int i){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            if (i == this->size() -1) {
+                this->_QLinkedList[this->_size-1] = value_type();
+                this->_size--;
+            } else {
+                for (;i < this->_size - 1; i++)
+                    this->_QLinkedList[i] = this->_QLinkedList[i+1];
+                this->_QLinkedList[i] = value_type();
+                this->_size--;
+            }
+        }
+        
+        void removeFirst(){
+            __ESBMC_assert(!this->empty(), "QLinkedList cannot be empty.");
+            this->removeAt(0);
+        }
+        
+        void removeLast(){
+            __ESBMC_assert(!this->empty(), "QLinkedList cannot be empty.");
+            this->removeAt(this->_size - 1);
+        }
+        
+        bool removeOne(const T& value){
+            for (int i = 0 ; i < this->_size; i++)
+                if (this->_QLinkedList[i] == value){
+                    this->removeAt(i);
+                    return true;
+                }
+            return false;
+        }
+        
+        void replace(int i, const T& value){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            this->_QLinkedList[i] = value;
+        }
+        
+        bool startsWith(const T& value) const{
+            if (!(this->empty()) & this->_QLinkedList[0] == value)
+                return true;
+            return false;
+        }
+        
+        void swap(int i, int j){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            __ESBMC_assert(0 <= j < this->size(),"Invalid position.");
+            value_type x = this->_QLinkedList[i];
+            this->_QLinkedList[i] = this->_QLinkedList[j];
+            this->_QLinkedList[j] = x;
+        }
+        
+        T takeAt(int i){
+            __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+            value_type x = this->_QLinkedList[i];
+            this->removeAt(i);
+            return x;
+        }
+        
+        T takeFirst(){
+            value_type x = this->_QLinkedList[0];
+            this->removeAt(0);
+            return x;
+        }
+        
+        T takeLast(){
+            value_type x = this->_QLinkedList[this->_size - 1];
+            this->removeAt(this->_size - 1);
+            return x;
+        }
+        
+        std::list<T> toStdList() const{
+            std::list<T> __QLinkedList;
+            for (int i = 0; i < this->_size; i++)
+                __QLinkedList.push_back(this->_QLinkedList[i]);
+            return __QLinkedList;
+        }
+        
+        T value(int i) const{
+            if (0 <= i < this->size())
+                return this->_QLinkedList[i];
+            return value_type();
+        }
+        
+        T value(int i, const T& defaultValue) const{
+            if (0 <= i < this->size())
+                return this->_QLinkedList[i];
+            return defaultValue;
+        }
+        
+        size_type size() const {
+            return this->_size;
+        }
+        
+        bool empty() const {
+            if (this->_size == 0)
+                return true;
+            return false;
+        }
+        
+        bool isEmpty() const{
+            if (this->_size == 0)
+                return true;
+            return false;
+        }
+        
+        T& back() {
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[this->_size-1];
+        }
+        
+        const T& back() const{
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[this->_size-1];
+        }
+        
+        T& last() {
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[this->_size-1];
+        }
+        
+        const T& last() const{
+            __ESBMC_assert(!empty(),
+                           "\n  This method returns a reference to the last element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[this->_size-1];
+        }
+        
+        T& front() {
+            __ESBMC_assert(!empty(),
+                           "  This method returns a reference to the first element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[0];
+        }
+        
+        const T& front() const {
+            __ESBMC_assert(!empty(),
+                           "  This method returns a reference to the first element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            return this->_QLinkedList[0];
+        }
+        
+        void pop_front() {
+            __ESBMC_assert(!empty(),
+                           "\n  This method removes the first element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            this->_size--;
+            for(int i = 0; i < this->_size; i++){
+                this->_QLinkedList[i] = this->_QLinkedList[i+1];
+            }
+            this->_QLinkedList[this->_size + 1] = value_type();
+        }
+        
+        void pop_back() {
+            __ESBMC_assert(!empty(),
+                           "\n  This method removes the last element in the QLinkedList container.\n  Therefore, the QLinkedList can't be empty.\n");
+            this->_QLinkedList[this->_size -1] = value_type();
+            this->_size--;
+        }
+        
+        void push_back(const value_type& x) {
+            this->_QLinkedList[this->_size] = x;
+            this->_size++;
+        }
+        
+        void push_front(const value_type& x) {
+            if (this->_size != 0) {
+                for(int i = this->_size -1; i > -1; i--){
+                    this->_QLinkedList[i+1] = this->_QLinkedList[i];
+                }
+            }
+            this->_QLinkedList[0] = x;
+            this->_size++;
+        }
+        
+        iterator _insert(iterator& position, const value_type& x) {
+            for(int i = position.pos; i < this->_size; i++){
+                this->_QLinkedList[i + 1] = this->_QLinkedList[i];
+            }
+            this->_QLinkedList[position.pos] = x;
+            this->_size++;
+            position.pos++;
+            position.it = &(this->_QLinkedList[position.pos]);
+            return position;
+        }
+        
+        void insert(int position, const value_type& x) {
+            for(int i = position; i < this->_size; i++){
+                this->_QLinkedList[i + 1] = this->_QLinkedList[i];
+            }
+            this->_QLinkedList[position] = x;
+            this->_size++;
+        }
+        
+        int lastIndexOf(const T& value, int from = -1) const{
+            //__ESBMC_assert(from < -1 && from >= this->_size, "Position invalid.");
+            if (from == -1)
+                from = this->_size;
+            for (int i = from; i > -1; i--)
+                if (this->_QLinkedList[i] == value)
+                    return i;
+            return -1;
+        }
+
+        iterator& erase(iterator& position) {
+            this->_size--;
+            for(int i = position.pos; i <  this->_size; i++){
+                this->_QLinkedList[i] = this->_QLinkedList[i+1];
+            }
+            this->_QLinkedList[this->_size] = value_type();
+            position.it = &(this->_QLinkedList[position.pos]);
+            return position;
+        }
+        
+        iterator& erase(iterator& position, iterator& last) {
+            while(position.pos != last.pos){
+                this->erase(position);
+            }
+            return last;
+        }
+        
+        void swap(QLinkedList<value_type>& x) {
+            QLinkedList<value_type> _tmp;
+            for(int i = 0; i < this->_size; i++)
+                _tmp._QLinkedList[i] = this->_QLinkedList[i];
+            _tmp._size = this->_size;
+            this->clear();
+            for(int i = 0; i < x._size; i++)
+                this->_QLinkedList[i] = x._QLinkedList[i];
+            this->_size = x._size;
+            x.clear();
+            for(int i = 0; i < _tmp._size; i++)
+                x._QLinkedList[i] = _tmp._QLinkedList[i];
+            x._size = _tmp._size;
+        }
+        
+        void clear() {
+            this->~QLinkedList();
+        }
+        
+        bool operator==(const QLinkedList<T>& other) {
+            if (this->_size == other._size)
+                return true;
+            //TODO
+            //for(int i = 0; i <  this->_size; i++)
+            //	if(this->_QLinkedList[i] != y._QLinkedList[i])
+            //		return false;
+            return false;
+        }
+        
+        bool operator!=(const QLinkedList<T>& other) {
+            if (this->_size != other._size)
+                return true;
+            //TODO
+            //for(int i = 0; i <  this->_size; i++)
+            //	if(this->_QLinkedList[i] != y._QLinkedList[i])
+            //		return false;
+            return false;
+        }
+        
+        QLinkedList<T> operator+(const QLinkedList<T>& other) {
+            QLinkedList<T> _tmp;
+            int i = 0;
+            for (; i < this->_size; i++)
+                _tmp._QLinkedList[i] = this->_QLinkedList[i];
+            for (int j = 0; j < other._size; j++, i++) {
+                _tmp._QLinkedList[i] = other._QLinkedList[j];
+            }
+            return _tmp;
+        }
+        
+        QLinkedList<T>& operator+=(const QLinkedList<T> & other) {
+            int i = this->_size;
+            for (int j = 0; j < other._size; j++, i++) {
+                this->push_back(other._QLinkedList[j]);
+            }
+            return *this;
+        }
+        
+        QLinkedList<T>& operator+=(const T & value) {
+            this->push_back(value);
+            return *this;
+        }
+        
+        QLinkedList<T>& operator<<(const QLinkedList<T> & other) {
+            for (int i = 0; i < other._size; i++)
+                this->push_back(other._QLinkedList[i]);
+            return *this;
+        }
+        
+        QLinkedList<T>& operator<<(const T& value) {
+            this->push_back(value);
+            return *this;
+        }
+        
+        QLinkedList<T>& operator=(const QLinkedList<T> & other) {
+            this->clear();
+            for (int i = 0; i < other._size; i++)
+                this->push_back(other._QLinkedList[i]);
+            return *this;
+        }
+        
+        //bool operator=(QLinkedList<T> && other) {
+        //TODO
+        //}
+        
+        QLinkedList<T> fromStdList( std::list<T>& l){ //this method should be static
+            for(int i = 0; i < this->_size; i++){
+                this->_QLinkedList[i] = T();
+            }
+            this->_size = 0;
+            std::list<T>::iterator it = l.begin();
+            std::list<T>::iterator _endIt = l.end();
+            for (; it != l.end(); it++) {
+                this->push_back(*it);
+            }
+            return *this;
+        }
+        
+    };
 #endif
-
-}
