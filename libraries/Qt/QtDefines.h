@@ -11,7 +11,6 @@
 #undef ULONG_MAX
 #define ULONG_MAX (LONG_MAX * 2UL + 1UL)
 
-
 # ifndef Q_DECL_OVERRIDE
 #  define Q_DECL_OVERRIDE
 # endif

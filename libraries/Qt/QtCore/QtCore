@@ -1,5 +1,10 @@
+#ifndef QT_QTCORE_MODULE_H
+#define QT_QTCORE_MODULE_H
+
 #include "QtDefines.h"
+#include "QMutex"
 #include "QThread"
+
 
 void qWarning ( const char * msg, ... ){}
 
@@ -11,3 +16,5 @@ public:
 	Type type () const{}
 	~QEvent();
 };
+
+#endif //QT_QTCORE_MODULE_H
