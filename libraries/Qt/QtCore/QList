@@ -12,7 +12,7 @@
 
 #include "../../definitions.h" //OK
 #include "QSet" //OK
-#include "QVector" //OK
+//#include "QVector" //OK
 #include "../../list" //OK
 
 #define LIST_MAX_SIZE 20  //OK
@@ -159,39 +159,7 @@
         QList(){ //OK
             this->_size = 0;
         }
-        /*
-        QList(size_type n, const value_type& value = value_type()) {
-            __ESBMC_assert(n > 0,
-                           "  In the first parameter is specified the container size,\n  therefore, this parameter must be greater than zero.\n");
-            for(int i = 0; i < n; i++){
-                this->_list[i] = value;
-            }
-            this->_size = n;
-        }
         
-        QList(value_type* t1, value_type* t2) {
-            __ESBMC_assert(t1 != NULL,
-                           "\n  In the first parameter is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
-            __ESBMC_assert(t2 != NULL,
-                           "\n  In the second parameter (last) is specified the pointer to final of the range,\n  therefore, this parameter must be different than NULL.\n");
-            int i;
-            for(i = 0; t1 != t2; i++){
-                this->_list[i] = *t1;
-                t1++;
-            }
-            this->_size = i;
-        }
-        
-        QList(iterator first, iterator last) {
-            __ESBMC_assert(first.it != NULL,
-                           "\n  In the first parameter (first) is specified the pointer to beginning of the range,\n  therefore, this parameter must be different than NULL.\n");
-            int i;
-            for(i = 0; first.it != last.it; first++, i++){
-                this->_list[i] = *(first.it);
-            }
-            this->_size = i;
-        }
-        */
         QList(const QList<T>& x) { //OK
             for(int i = 0; i < x._size; i++)
                 this->_list[i] = x._list[i];
@@ -457,9 +425,10 @@
             return __list;
         }
 
-        QVector<T>	toVector() const{
-            //TODO
-        }
+        //QVector< T > toVector() {
+            //QVector< T > x;
+            //return x;
+        //}
         
         T value(int i) const{
             if (0 <= i < this->size())
@@ -482,20 +451,6 @@
                 return true;
             return false;
         }
-        /*
-        size_type max_size() const {
-            return this->_size;
-        }
-        
-        void resize(size_type sz,value_type c = value_type()) {
-            __ESBMC_assert(sz > 0,
-                           "\n  In the first parameter (n) is specified the container size,\n  therefore, this parameter must be greater than zero.\n");
-            for(size_type i = this->_size; i < sz; i++){
-                this->_list[i] = c;
-            }
-            this->_size = sz;
-        }
-        */
         
         bool isEmpty() const{
             if (this->_size == 0)
@@ -591,7 +546,7 @@
         }
         
         int lastIndexOf(const T& value, int from = -1) const{
-            //__ESBMC_assert(from < -1 && from >= this->_size, "Position invalid.");
+            __ESBMC_assert(from >= -1 && from < this->_size, "Position invalid.");
             if (from == -1)
                 from = this->_size;
             for (int i = from; i > -1; i--)
@@ -599,33 +554,6 @@
                     return i;
             return -1;
         }
-        
-        /*
-        void insert(iterator& position, size_type n, const value_type& x) {
-            __ESBMC_assert(n >= 0,
-                           "The second parameter must be greater or equal than zero.");
-            int i;
-            for (i = 0; i < n; i++) {
-                this->insert(position, x);
-            }
-            position.pos--;
-            position.it = &(this->_list[position.pos]);
-        }
-        
-        void assign(iterator first, iterator last) {
-            __ESBMC_assert(first.it != NULL,
-                           "The first parameter must be different than NULL.");
-            *this = QList(first,last);
-        }
-        
-        void assign(value_type* first, value_type* last) {
-            *this = QList(first, last);
-        }
-        
-        void assign(size_type n, const value_type& u) {
-            *this = QList(n, u);
-        }
-        */
         
         iterator& erase(iterator& position) {
             this->_size--;
@@ -640,6 +568,7 @@
         iterator& erase(iterator& position, iterator& last) {
             while(position.pos != last.pos){
                 this->erase(position);
+                position++;
             }
             return last;
         }
@@ -662,181 +591,6 @@
         void clear() {
             this->~QList();
         }
-        /*
-        void splice(iterator& position, QList<value_type>& x) {
-            size_type _tmp = x._size;
-            for(int i = 0; i < _tmp;i++){
-                this->insert(position,x.front());
-                x.pop_front();
-            }
-            x.clear();
-        }
-        
-        void splice(iterator& position, QList<value_type>& x, iterator i) {
-            this->insert(position,*i.it);
-            x.erase(i);
-        }
-        
-        void splice(iterator& position, QList<value_type>& x, iterator& first, iterator& last) {
-            if(last.pos == x._size)
-                last--;
-            for(;first.pos != last.pos;last--){
-                this->insert(position,last.it[last.pos]);
-                x.erase(last);
-            }
-        }
-        
-        void remove(const value_type& value) {
-            iterator _itEnd = this->end();
-            for(iterator _it = this->begin(); _it != _itEnd; _it++)
-                if(*_it == value){
-                    this->erase(_it);
-                    return;
-                }
-        }
-        
-        void remove_if(pred* x) {
-            __ESBMC_assert(x != NULL, "The parameter must be different than NULL.");
-            for(iterator _it = this->begin(); _it.pos <= this->_size; _it++)
-                if(x(*_it.it)){
-                    this->erase(_it);
-                }
-        }
-        
-        template<class Predicate>
-        void remove_if(Predicate* pred) {
-            __ESBMC_assert(pred != NULL,
-                           "The parameter must be different than NULL.");
-            for(iterator _it = this->begin(); _it.pos <= this->_size; _it++)
-                if(pred()(*_it.it)){
-                    this->erase(_it);
-                }
-        }
-        
-        void unique() {
-            size_type i;
-            size_type j = 0;
-            size_type _limit = this->_size;
-            value_type _tmp[LIST_MAX_SIZE];
-            for(i = 0; (i+1) < _limit; i++){
-                if(this->_list[i] != this->_list[i+1]){
-                    _tmp[j] = this->_list[i];
-                    j++;
-                }else{
-                    this->_size--;
-                }
-            }
-            _tmp[j] = this->_list[i];
-            for(i = 0; i < this->_size;i++){
-                this->_list[i] = _tmp[i];
-            }
-        }
-        
-        void unique(pred_double* x) {
-            __ESBMC_assert(x != NULL, "The parameter must be different than NULL.");
-            size_type i;
-            size_type j = 0;
-            size_type _limit = this->_size;
-            value_type _tmp[LIST_MAX_SIZE];
-            for(i = 0; (i+1) < _limit; i++){
-                if(x(this->_list[i],this->_list[i+1])){
-                    _tmp[j] = this->_list[i];
-                    j++;
-                }else{
-                    this->_size--;
-                }
-            }
-            _tmp[j] = this->_list[i];
-            for(i = 0; i < this->_size;i++){
-                this->_list[i] = _tmp[i];
-            }
-        }
-        
-        template<class Predicate>
-        void unique(Predicate pred) {
-            __ESBMC_assert(pred != NULL,
-                           "The parameter must be different than NULL.");
-            size_type i;
-            size_type j = 0;
-            size_type _limit = this->_size;
-            value_type _tmp[LIST_MAX_SIZE];
-            for(i = 0; (i+1) < _limit; i++){
-                if(pred(this->_list[i],this->_list[i+1])){
-                    _tmp[j] = this->_list[i];
-                    j++;
-                }else{
-                    this->_size--;
-                }
-            }
-            _tmp[j] = this->_list[i];
-            for(i = 0; i < this->_size;i++){
-                this->_list[i] = _tmp[i];
-            }
-        }
-        
-        void merge(QList<value_type>& x) {
-            for(int i = 0; i < x._size; i++){
-                this->push_back(x._list[i]);
-            }
-            this->sort();
-            x.clear();
-        }
-        
-        void merge(QList<value_type>& x, pred_double* pred) {
-            __ESBMC_assert(pred != NULL,
-                           "The second parameter must be different than NULL.");
-            QList _tmp;
-            size_type i;
-            for(i = 0; (i < this->_size) && (i < x._size) ; i++){
-                if(pred(this->_list[i],x._list[i])){
-                    _tmp.push_back(this->_list[i]);
-                    _tmp.push_back(x._list[i]);
-                }else{
-                    _tmp.push_back(x._list[i]);
-                    _tmp.push_back(this->_list[i]);
-                }
-            }
-            if(i != this->_size){
-                for(;i < this->_size; i++){
-                    _tmp.push_back(this->_list[i]);
-                }
-            }
-            if(i != x._size){
-                for(;i < x._size; i++){
-                    _tmp.push_back(x._list[i]);
-                }
-            }
-            for(i = 0; i < _tmp._size; i++){
-                this->_list[i] = _tmp._list[i];
-            }
-            this->_size = _tmp._size;
-        }
-        
-        void sort() {
-            size_type i, j;
-            value_type _pivo, _tmp;
-            for(i = 0; i < this->_size; i++){
-                _pivo = this->_list[i];
-                for(j = i; j < this->_size; j++){
-                    if(this->_list[j] < _pivo){
-                        _tmp = _pivo;
-                        _pivo = this->_list[j];
-                        this->_list[j] = _tmp;
-                    }
-                }
-                this->_list[i] = _pivo;
-            }
-        }
-        
-        void reverse() {
-            QList<value_type> _tmp;
-            for(int i = 0; i < this->_size; i++){
-                _tmp.push_front(this->_list[i]);
-            }
-            for(int i = 0; i < _tmp._size; i++)
-                this->_list[i] = _tmp._list[i];
-        }
-        */
         
         bool operator==(const QList<T>& other) {
             if (this->_size == other._size)
@@ -922,9 +676,9 @@
             //TODO
         }
         
-        static QList<T> fromVector(const QVector<T> & vector){
+//        static QList<T> fromVector(const QVector<T> & vector){
             //TODO
-        }
+  //      }
         
     };
 #endif
