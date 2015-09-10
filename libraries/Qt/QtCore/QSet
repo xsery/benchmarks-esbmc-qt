@@ -220,7 +220,7 @@ public:
 			buf[i] = x.buf[i];
 		}
 		_size = x.size();
-		buf[_size] = 0;
+		buf[_size] = Key();
 	}
 
 	void clear(){
