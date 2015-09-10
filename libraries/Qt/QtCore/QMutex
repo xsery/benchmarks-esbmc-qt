@@ -15,10 +15,12 @@ Date:
 
 class QMutex {
 private:
-    pthread_mutex_t _mutex;
+    //pthread_mutex_t _mutex;
 
 public:
-	QMutex()
+        enum RecursionMode { NonRecursive, Recursive };
+	
+        QMutex(RecursionMode mode = NonRecursive)
         {
           //pthread_mutex_init(&_mutex, NULL);
         }
