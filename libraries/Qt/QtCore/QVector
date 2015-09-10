@@ -175,7 +175,9 @@ public:
     
     QVector(const QVector<T> & other){
         this->_size = other._size;
-        this->_qvector = other._qvector;
+        for (int i = 0; i < this->_size; i++) {
+            this->_qvector[i] = other._qvector[i];
+        }
     }
     
     QVector(QVector<T> && other){
