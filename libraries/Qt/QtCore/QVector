@@ -27,9 +27,6 @@ public:
     typedef T* pointer;
     typedef const T* const_pointer;
     
-    typedef bool (pred_double)(T, T);
-    typedef bool (pred)(T &);
-    
     value_type _qvector[VECTOR_MAX_SIZE];
     size_type _size;
     
@@ -565,6 +562,7 @@ public:
         __ESBMC_assert(size > 0,"Invalid position.");
         //CHECK IT
     }
+
     void	resize(int size){
         __ESBMC_assert(size > 0,"Invalid position.");
         if (size > this->_size) {
@@ -585,6 +583,7 @@ public:
     void	squeeze(){
         //TODO
     }
+
     bool	startsWith(const T & value) const{
         if (!(this->empty()) & this->_qvector[0] == value)
             return true;
