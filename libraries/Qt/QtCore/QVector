@@ -234,7 +234,7 @@ public:
     }
     
     int	capacity() const{
-        //TODO
+        return (this->_size * 2);
     }
     
     const_iterator	cbegin() const{
@@ -266,7 +266,8 @@ public:
     }
     
     const T *	constData() const{
-        //TODO
+        T* _tmp = this->_qvector;
+        return _tmp;
     }
     
     const_iterator constEnd() const{
@@ -297,10 +298,12 @@ public:
     }
     
     T *	data(){
-        //TODO
+        T* _tmp = this->_qvector;
+        return _tmp;
     }
     const T *	data() const{
-        //TODO
+        T* _tmp = this->_qvector;
+        return _tmp;
     }
     bool	empty() const{
         if (this->_size == 0)
@@ -329,14 +332,30 @@ public:
             return true;
         return false;
     }
+    
     iterator	erase(iterator pos){
-        //TODO
+        this->_size--;
+        for(int i = pos.pos; i <  this->_size; i++){
+            this->_qvector[i] = this->_qvector[i+1];
+        }
+        this->_qvector[this->_size] = value_type();
+        pos.it = &(this->_qvector[pos.pos]);
+        return pos;
     }
     iterator	erase(iterator begin, iterator end){
-        //TODO
+        while(begin.pos != end.pos){
+            this->erase(begin);
+            begin++;
+        }
+        return end;
     }
-    QVector<T> &	fill(const T & value, int size = -1){
-        //TODO
+    QVector<T> & fill(const T & value, int size = -1){
+        if (size == -1)
+            size = this->_size;
+        this->clear();
+        for(int i = 0; i < size; i++)
+            this->_qvector[i] = value;
+        this->_size = size;
     }
     
     T &	first(){
@@ -360,35 +379,67 @@ public:
     }
     
     int	indexOf(const T & value, int from = 0) const{
-        //TODO
+        for (int i = from; i < this->_size; i++) {
+            if (this->_qvector[i] == value) {
+                return i;
+            }
+        }
+        return -1;
     }
-    void	insert(int i, const T & value){
-        //TODO
+    
+    void	insert(int position, const T & value){
+        for(int i = position; i < this->_size; i++){
+            this->_qvector[i + 1] = this->_qvector[i];
+        }
+        this->_qvector[position] = value;
+        this->_size++;
     }
+    
     iterator	insert(iterator before, int count, const T & value){
-        //TODO
+        for (int i = 0; i < count; i++)
+            this->insert(before, value);
     }
+    
     void	insert(int i, int count, const T & value){
-        //TODO
+        for (int j = 0; j < count; j++)
+            this->insert(i,value);
     }
+    
     iterator	insert(iterator before, const T & value){
-        //TODO
+        for(int i = before.pos; i < this->_size; i++){
+            this->_qvector[i + 1] = this->_qvector[i];
+        }
+        this->_qvector[before.pos] = value;
+        this->_size++;
+        before.pos++;
+        before.it = &(this->_qvector[before.pos]);
+        return before;
     }
+    
     bool	isEmpty() const{
         if (this->_size == 0)
             return true;
         return false;
     }
+    
     T &	last(){
         __ESBMC_assert(this->_size != 0, "Container is empty!");
         return this->_qvector[this->_size - 1];
     }
+    
     const T &	last() const{
         __ESBMC_assert(this->_size != 0, "Container is empty!");
         return this->_qvector[this->_size - 1];
     }
+    
     int	lastIndexOf(const T & value, int from = -1) const{
-        //TODO
+        __ESBMC_assert(from >= -1 && from < this->_size, "Position invalid.");
+        if (from == -1)
+            from = this->_size;
+        for (int i = from; i > -1; i--)
+            if (this->_qvector[i] == value)
+                return i;
+        return -1;
     }
     
     int	length() const{
@@ -396,7 +447,16 @@ public:
     }
     
     QVector<T>	mid(int pos, int length = -1) const{
-        //TODO
+        __ESBMC_assert(pos >= 0 & pos < this->_size,"Position invalid.");
+        __ESBMC_assert(length >= 0 & length <= this->_size,"Position invalid.");
+        QVector<T> __newVector;
+        if (length == -1) {
+            length = this->_size;
+        }
+        for (int i = pos; i < length; i++) {
+            __newVector._qvector[i] = this->_qvector[i];
+        }
+        return __newVector;
     }
     
     void	pop_back(){
@@ -417,7 +477,7 @@ public:
     }
     
     void	prepend(const T & value){
-        //TODO
+        this->insert(this->begin(),value);
     }
     
     void push_back( const T& value ){
@@ -431,38 +491,89 @@ public:
                 this->_qvector[i+1] = this->_qvector[i];
             }
         }
-        this->_qvector[0] = x;
+        this->_qvector[0] = value;
         this->_size++;
     }
+    
     void	remove(int i){
-        //TODO
+        __ESBMC_assert(i >= 0 && i < this->size(),"Invalid position.");
+        if (i == this->size() -1) {
+            this->_qvector[this->_size-1] = value_type();
+            this->_size--;
+        } else {
+            for (;i < this->_size - 1; i++)
+                this->_qvector[i] = this->_qvector[i+1];
+            this->_qvector[i] = value_type();
+            this->_size--;
+        }
     }
     void	remove(int i, int count){
-        //TODO
+        __ESBMC_assert(i >= 0 && i < this->size(),"Invalid position.");
+        __ESBMC_assert(count >= i && count < this->size(),"Second parameter invalid.");
+        for (int j = 0; j < count; j++)
+            this->remove(i);
     }
+    
     int	removeAll(const T & t){
-        //TODO
+        int j = 0;
+        for (int i = 0 ; i < this->_size; i++)
+            if (this->_qvector[i] == t)
+                this->removeAt(i);
+        return j;
     }
+    
     void	removeAt(int i){
-        //TODO
+        __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+        if (i == this->size() -1) {
+            this->_qvector[this->_size-1] = value_type();
+            this->_size--;
+        } else {
+            for (;i < this->_size - 1; i++)
+                this->_qvector[i] = this->_qvector[i+1];
+            this->_qvector[i] = value_type();
+            this->_size--;
+        }
     }
+    
     void	removeFirst(){
-        //TODO
+        __ESBMC_assert(!this->empty(), "List cannot be empty.");
+        this->removeAt(0);
     }
+    
     void	removeLast(){
-        //TODO
+        __ESBMC_assert(!this->empty(), "List cannot be empty.");
+        this->removeAt(this->_size - 1);
     }
+    
     bool	removeOne(const T & t){
-        //TODO
+        for (int i = 0 ; i < this->_size; i++)
+            if (this->_qvector[i] == t){
+                this->removeAt(i);
+                return true;
+            }
+        return false;
     }
+    
     void	replace(int i, const T & value){
-        //TODO
+        __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+        this->_qvector[i] = value;
     }
+    
     void	reserve(int size){
-        //TODO
+        __ESBMC_assert(size > 0,"Invalid position.");
+        //CHECK IT
     }
     void	resize(int size){
-        //TODO
+        __ESBMC_assert(size > 0,"Invalid position.");
+        if (size > this->_size) {
+            for (int i = this->_size; i < size ; i++)
+                this->_qvector[i] = value_type();
+            this->_size = size;
+        } else {
+            for (int i = size; i < this->_size ; i++)
+                this->_qvector[i] = value_type();
+            this->_size = size;
+        }
     }
     
     int size() const{
@@ -473,64 +584,136 @@ public:
         //TODO
     }
     bool	startsWith(const T & value) const{
-        //TODO
+        if (!(this->empty()) & this->_qvector[0] == value)
+            return true;
+        return false;
     }
     void	swap(QVector<T> & other){
-        //TODO
+        QVector<value_type> __tmp;
+        __tmp = *this;
+        *this = other;
+        other = __tmp;
     }
+    
     T	takeAt(int i){
-        //TODO
+        __ESBMC_assert(0 <= i < this->size(),"Invalid position.");
+        value_type x = this->_qvector[i];
+        this->removeAt(i);
+        return x;
     }
+    
     T	takeFirst(){
-        //TODO
+        __ESBMC_assert(!this->empty(), "Container is empty.");
+        value_type x = this->_qvector[0];
+        this->removeAt(0);
+        return x;
     }
+    
     T	takeLast(){
-        //TODO
+        __ESBMC_assert(!this->empty(), "Container is empty.");
+        value_type x = this->_qvector[this->_size - 1];
+        this->removeAt(this->_size - 1);
+        return x;
     }
+    
     QList<T> toList() const{
-        //TODO
+        QList<T> __list;
+        for (int i = 0; i < this->_size; i++)
+            __list.push_back(this->_qvector[i]);
+        return __list;
     }
-    std::vector<T>	toStdVector() const{
-        //TODO
+    
+    std::vector<T> toStdVector() const{
+        std::vector< T > x;
+        for (int i = 0; i < this->_size; i++)
+            x.push_back(this->_qvector[i]);
+        return x;
     }
+    
     T	value(int i) const{
-        //TODO
+        if (0 <= i < this->size())
+            return this->_qvector[i];
+        return value_type();
     }
+    
     T	value(int i, const T & defaultValue) const{
-        //TODO
+        if (0 <= i < this->size())
+            return this->_qvector[i];
+        return defaultValue;
     }
+    
     bool	operator!=(const QVector<T> & other) const{
-        //TODO
+        if (this->_size != other._size)
+            return true;
+        for (int i = 0; i < this->_size; i++)
+            if (!(this->_qvector[i] == other._qvector[i]))
+                return true;
+        return false;
     }
+    
     QVector<T>	operator+(const QVector<T> & other) const{
-        //TODO
+        QVector<T> _tmp(other._size);
+        int i = 0;
+        for (; i < this->_size; i++)
+            _tmp._qvector[i] = this->_qvector[i];
+        for (int j = 0; j < other._size; j++, i++) {
+            _tmp._qvector[i] = other._qvector[j];
+        }
+        return _tmp;
     }
+    
     QVector<T> &	operator+=(const QVector<T> & other){
-        //TODO
+        int i = this->_size;
+        for (int j = 0; j < other._size; j++, i++) {
+            this->push_back(other._qvector[j]);
+        }
+        return *this;
     }
+    
     QVector<T> &	operator+=(const T & value){
-        //TODO
+        this->push_back(value);
+        return *this;
     }
+    
     QVector<T> &	operator<<(const T & value){
-        //TODO
+        this->push_back(value);
+        return *this;
     }
+    
     QVector<T> &	operator<<(const QVector<T> & other){
-        //TODO
+        for (int i = 0; i < other._size; i++)
+            this->push_back(other._qvector[i]);
+        return *this;
     }
+    
     QVector<T> &	operator=(const QVector<T> & other){
-        //TODO
+        this->clear();
+        for (int i = 0; i < other._size; i++)
+            this->push_back(other._qvector[i]);
+        return *this;
     }
+    
     QVector<T>	operator=(QVector<T> && other){
         //TODO
     }
+    
     bool	operator==(const QVector<T> & other) const{
-        //TODO
+        if (this->_size != other._size)
+            return false;
+        for (int i = 0; i < this->_size; i++)
+            if (!(this->_qvector[i] == other._qvector[i]))
+                return false;
+        return true;
     }
+    
     T &	operator[](int i){
-        //TODO
+        __ESBMC_assert( i >= 0 && i < this->_size, "Position invalid.");
+        return this->_qvector[i];
     }
+    
     const T &	operator[](int i) const{
-        //TODO
+        __ESBMC_assert( i >= 0 && i < this->_size, "Position invalid.");
+        return this->_qvector[i];
     }
 };
 #endif
