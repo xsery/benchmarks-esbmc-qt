@@ -1,16 +1,129 @@
 /*******************************************************************\
 
-Module: 
+Module: Qt
 
-Author: Mário Angel
+Author: Felipe Monteiro
 
-Date: 
+Date: August 2015
 
 \*******************************************************************/
 
-class QMultiMap {
+#ifndef __QMULTIMAP
+#define __QMULTIMAP
+
+#include "QMap"
+
+template<class Key, class T>
+class QMultiMap : public QMap<Key,T> {
 public:
-	QMultiMap();
-	~QMultiMap();
+    
+    key_type _key[QMAP_SIZE];
+    mapped_type _value[QMAP_SIZE];
+    size_type _size;
+    
+    QMultiMap(){
+        this->_size = 0;
+        this->_key[0] = Key();
+        this->_value[0] = T();
+    }
+    
+    //QMultiMap(std::initializer_list<std::pair<Key, T> > list){
+        //TODO
+    //}
+    
+    QMultiMap(const QMap<Key, T> & other){
+        this->clear();
+        this->_size = other._size;
+        for (int i = 0; i < other._size; i++) {
+            this->_key[i] = other._key[i];
+            this->_value[i] = other._value[i];
+        }
+    }
+    
+    QMap<Key, T>::const_iterator	constFind(const Key & key, const T & value) const {
+        unsigned int s = this->_size;
+        const_iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            return this->end();
+        }
+    }
+    
+    bool	contains(const Key & key, const T & value) const{
+        //TODO
+    }
+    
+    int	count(const Key & key, const T & value) const{
+        //TODO
+    }
+    
+    QMap<Key, T>::iterator	find(const Key & key, const T & value){
+        //TODO
+    }
+    
+    QMap<Key, T>::const_iterator	find(const Key & key, const T & value) const{
+        //TODO
+    }
+    
+    QMap<Key, T>::iterator	insert(const Key & key, const T & value){
+        //TODO
+    }
+    
+    QMap<Key, T>::iterator	insert(QMap<Key, T>::const_iterator pos, const Key & key, const T & value){
+        //TODO
+    }
+    
+    int	remove(const Key & key, const T & value){
+        //TODO
+    }
+    
+    QMap<Key, T>::iterator	replace(const Key & key, const T & value){
+        //TODO
+    }
+    
+    void	swap(QMultiMap<Key, T> & other){
+        //TODO
+    }
+    
+    QMultiMap	operator+(const QMultiMap & other) const{
+        //TODO
+    }
+    
+    QMultiMap &	operator+=(const QMultiMap & other){
+        //TODO
+    }
 };
 
+#endif
+//EOF
