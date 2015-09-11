@@ -8,48 +8,27 @@
  
  \*******************************************************************/
 
-#ifndef __STL_QMAP
-#define __STL_QMAP
+#ifndef __QMap
+#define __QMap
 
-#define map QMap
+#include "../../map"
+#include "QList"
 
-#include "../../utility"
-#include "../../vector"
-#include "../../functional"
+#define QMAP_SIZE 15
 
-#define MAP_SIZE 15
-
-namespace std {
-        template<class Key, class T, class Compare = less<Key> >
-        class map {
+        template<class Key, class T>
+        class QMap {
             
         public:
             
             typedef Key key_type;
             typedef T mapped_type;
             typedef pair<Key, T> value_type;
-            typedef Compare key_compare;
             typedef unsigned int size_type;
             
-            key_type _key[MAP_SIZE];
-            mapped_type _value[MAP_SIZE];
-            int _size;
-            
-            typedef bool (func)(Key, Key);
-            
-            class value_compare {
-            public:
-                Compare comp;
-                value_compare(Compare c) :
-                comp(c) {
-                }
-                typedef bool result_type;
-                typedef value_type first_argument_type;
-                typedef value_type second_argument_type;
-                bool operator()(value_type& x, value_type& y) const {
-                    return comp(x.first, y.first);
-                }
-            };
+            key_type _key[QMAP_SIZE];
+            mapped_type _value[QMAP_SIZE];
+            size_type _size;
             
             class iterator {
             public:
@@ -135,135 +114,24 @@ namespace std {
             };
             
             typedef iterator const_iterator;
+            typedef iterator Iterator;
+            typedef iterator Constterator;
             
-            class reverse_iterator {
-            public:
-                
-                key_type* it_key;
-                mapped_type* it_value;
-                value_type it_pair;
-                int it_pos;
-                int* it_size;
-                
-                reverse_iterator(const reverse_iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                    this->it_size = x.it_size;
-                }
-                reverse_iterator() {
-                    this->it_pos = -1;
-                }
-                reverse_iterator& operator=(const reverse_iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                    this->it_size = x.it_size;
-                    return *this;
-                }
-                
-                value_type * operator ->() {
-                    return &(this->it_pair);
-                }
-                
-                value_type & operator *() {
-                    return this->it_pair;
-                }
-                
-                reverse_iterator& operator ++() {
-                    if (this->it_pos == 0) {
-                        this->it_pos--;
-                        this->it_pair.first = Key();
-                        this->it_pair.second = T();
-                        return *this;
-                    }
-                    if (this->it_pos == -1) {
-                        this->it_pos = *(this->it_size) - 1;
-                    } else {
-                        this->it_pos--;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                reverse_iterator operator ++(int) {
-                    if (this->it_pos == 0) {
-                        this->it_pos--;
-                        this->it_pair.first = Key();
-                        this->it_pair.second = T();
-                        return *this;
-                    }
-                    if (this->it_pos == -1) {
-                        this->it_pos = *(this->it_size) - 1;
-                    } else {
-                        this->it_pos--;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                reverse_iterator& operator --() {
-                    if (this->it_pos == this->it_size) {
-                        this->it_pos = 0;
-                    } else {
-                        this->it_pos++;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                reverse_iterator operator --(int) {
-                    if (this->it_pos == this->it_size) {
-                        this->it_pos = 0;
-                    } else {
-                        this->it_pos++;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                bool operator ==(const reverse_iterator& it) const {
-                    if (this->it_pos == it.it_pos)
-                        return true;
-                    if ((this->it_pair.first == it.it_pair.first)
-                        && (this->it_pair.second == it.it_pair.second))
-                        return true;
-                    return false;
-                }
-                bool operator !=(const reverse_iterator& it) const {
-                    if (this->it_pos != it.it_pos)
-                        return true;
-                    if ((this->it_pair.first != it.it_pair.first)
-                        && (this->it_pair.second != it.it_pair.second))
-                        return true;
-                    return false;
-                }
-            };
-            
-            map() {
+
+            QMap() {
                 this->_size = 0;
             }
             
-            map(iterator first, iterator last) {
-                int j = 0;
-                this->_size = 0;
-                int limit = last.it_pos - first.it_pos;
-                for (int i = first.it_pos; i != limit; i++, j++) {
-                    this->_key[j] = first.it_key[i];
-                    this->_value[j] = first.it_value[i];
-                    this->_size++;
+            QMap(const std::map<Key, T> & other){
+                this->_size = other._size;
+                size_type s = other._size;
+                for (int i = 0; i < s; i++) {
+                    this->_key[i] = other._key[i];
+                    this->_value[i] = other._value[i];
                 }
             }
-            
-            map(func* x) {
-                this->_size = 0;
-            }
-            
-            map(map& x) {
+
+            QMap( QMap<Key, T>& x ) {
                 this->_size = x._size;
                 size_type s = x._size;
                 for (int i = 0; i < s; i++) {
@@ -272,12 +140,15 @@ namespace std {
                 }
             }
             
+            ~QMap(){
+                this->_size = 0;
+            }
+
             T& operator[](const Key& x) {
                 unsigned int s = this->_size;
                 if (this->_size == 0) {
                     this->_key[0] = x;
                     this->_size++;
-                    //this->_value[0] = T();
                     this->_value[0] = T();
                     this->_key[this->_size + 1] = Key();
                     return this->_value[0];
@@ -286,8 +157,7 @@ namespace std {
                         if (this->_key[i] == x) {
                             return this->_value[i];
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()((Key&) x, this->_key[i])) {
+                        if(x < this->_key[i]){
                             int j;
                             Key y = x;
                             Key t;
@@ -305,7 +175,6 @@ namespace std {
                             this->_value[j] = u;
                             
                             this->_size++;
-                            //this->_value[i] = T();
                             this->_value[i] = T();
                             this->_key[this->_size + 1] = Key();
                             return this->_value[i];
@@ -313,14 +182,68 @@ namespace std {
                     }
                     this->_size++;
                     this->_key[s] = x;
-                    //this->_value[s] = T();
                     this->_value[s] = T();
                     this->_key[this->_size + 1] = Key();
                     return this->_value[s];
                 }
             }
             
-            // iterators:
+            const T& operator[](const Key& x) const {
+                unsigned int s = this->_size;
+                if (this->_size == 0) {
+                    this->_key[0] = x;
+                    this->_size++;
+                    this->_value[0] = T();
+                    this->_key[this->_size + 1] = Key();
+                    return this->_value[0];
+                } else {
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            return this->_value[i];
+                        }
+                        if(x < this->_key[i]){
+                            int j;
+                            Key y = x;
+                            Key t;
+                            T u, v;
+                            
+                            for (j = i; j < s; j++) {
+                                t = this->_key[j];
+                                this->_key[j] = y;
+                                y = t;
+                                u = this->_value[j];
+                                this->_value[j] = v;
+                                v = u;
+                            }
+                            this->_key[j] = y;
+                            this->_value[j] = u;
+                            
+                            this->_size++;
+                            this->_value[i] = T();
+                            this->_key[this->_size + 1] = Key();
+                            return this->_value[i];
+                        }
+                    }
+                    this->_size++;
+                    this->_key[s] = x;
+                    this->_value[s] = T();
+                    this->_key[this->_size + 1] = Key();
+                    return this->_value[s];
+                }
+            }
+            
+            bool empty() const{
+                if (this->_size == 0)
+                    return true;
+                return false;
+            }
+
+            bool isEmpty() const{
+                if (this->_size == 0)
+                    return true;
+                return false;
+            }
+            
             iterator begin() {
                 iterator it;
                 it.it_key = this->_key;
@@ -330,7 +253,37 @@ namespace std {
                 it.it_pair.second = this->_value[0];
                 return it;
             }
-            //const_iterator begin() const;
+            
+            const_iterator begin() const {
+                const_iterator it;
+                it.it_key = this->_key;
+                it.it_value = this->_value;
+                it.it_pos = 0;
+                it.it_pair.first = this->_key[0];
+                it.it_pair.second = this->_value[0];
+                return it;
+            }
+            
+            const_iterator cbegin() const {
+                const_iterator it;
+                it.it_key = this->_key;
+                it.it_value = this->_value;
+                it.it_pos = 0;
+                it.it_pair.first = this->_key[0];
+                it.it_pair.second = this->_value[0];
+                return it;
+            }
+            
+            const_iterator ConstBegin() const {
+                const_iterator it;
+                it.it_key = this->_key;
+                it.it_value = this->_value;
+                it.it_pos = 0;
+                it.it_pair.first = this->_key[0];
+                it.it_pair.second = this->_value[0];
+                return it;
+            }
+            
             iterator end() {
                 iterator it;
                 it.it_key = this->_key;
@@ -340,30 +293,38 @@ namespace std {
                 it.it_pair.second = this->_value[it.it_pos];
                 return it;
             }
-            //const_iterator end() const;
-            reverse_iterator rbegin() {
-                reverse_iterator it;
+            
+            const_iterator end() const {
+                const_iterator it;
                 it.it_key = this->_key;
                 it.it_value = this->_value;
-                it.it_size = &(this->_size);
-                it.it_pos = this->_size - 1;
+                it.it_pos = this->_size;
                 it.it_pair.first = this->_key[it.it_pos];
                 it.it_pair.second = this->_value[it.it_pos];
                 return it;
             }
-            //const_reverse_iterator rbegin() const;
-            reverse_iterator rend() {
-                reverse_iterator it;
+            
+            const_iterator cend() const {
+                const_iterator it;
                 it.it_key = this->_key;
                 it.it_value = this->_value;
-                it.it_size = &(this->_size);
-                it.it_pos = -1;
-                it.it_pair.first = Key();
-                it.it_pair.second = T();
+                it.it_pos = this->_size;
+                it.it_pair.first = this->_key[it.it_pos];
+                it.it_pair.second = this->_value[it.it_pos];
                 return it;
             }
-            //const_reverse_iterator rend() const;
             
+            const_iterator ConstEnd() const {
+                const_iterator it;
+                it.it_key = this->_key;
+                it.it_value = this->_value;
+                it.it_pos = this->_size;
+                it.it_pair.first = this->_key[it.it_pos];
+                it.it_pair.second = this->_value[it.it_pos];
+                return it;
+            }
+            
+            /*
             mapped_type& at(const Key& x) {
                 unsigned int s = this->_size;
                 if (this->_size == 0) {
@@ -411,22 +372,13 @@ namespace std {
                     return this->_value[s];
                 }
             }
-            
-            bool empty() const {
-                if (this->_size == 0)
-                    return true;
-                return false;
-            }
+            */
             
             size_type size() const {
                 return this->_size;
             }
             
-            size_type max_size() const {
-                return size_type();
-            }
-            
-            map& operator=(const map& x) {
+            QMap<Key, T>& operator=(const QMap<Key, T> & x) {
                 this->clear();
                 this->_size = x._size;
                 for (int i = 0; i < x._size; i++) {
@@ -444,39 +396,30 @@ namespace std {
                 }
             }
             
-            ~map() {
-                this->clear();
-            }
-            
-            void swap(map& x) {
-                map tmp;
+            void swap(QMap<Key, T> & x) {
+                QMap tmp;
                 tmp = *this;
                 *this = x;
                 x = tmp;
             }
-            
-            pair<iterator, bool> insert(Key __key, T __value) {
-		value_type val = pair<Key,T>(__key, __value);
+
+            iterator insert(Key __key, T __value) {
+                value_type val = pair<Key,T>(__key, __value);
                 unsigned int s = this->_size;
-                pair<iterator, bool> _pair;
                 if (this->_size == 0) {
                     this->_key[0] = val.first;
                     this->_size++;
                     //this->_value[0] = T();
                     this->_value[0] = val.second;
-                    _pair.first = this->begin();
-                    _pair.second = true;
-                    return _pair;
+                    return this->begin();
                 } else {
                     iterator it = this->begin();
                     for (int i = 0; i < s; i++) {
                         if (this->_key[i] == val.first) {
-                            _pair.first = it;
-                            _pair.second = false;
-                            return _pair;
+                            this->_value[i] = __value;
+                            return it;
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()(val.first, this->_key[i])) {
+                        if(val.first < this->_key[i]){
                             int j;
                             Key y = val.first;
                             Key t;
@@ -496,9 +439,7 @@ namespace std {
                             this->_size++;
                             //this->_value[i] = T();
                             this->_value[i] = val.second;
-                            _pair.first = it;
-                            _pair.second = true;
-                            return _pair;
+                            return it;
                         }
                         it++;
                     }
@@ -506,17 +447,62 @@ namespace std {
                     this->_key[s] = val.first;
                     //this->_value[s] = T();
                     this->_value[s] = val.second;
-                    _pair.first = this->end();
-                    _pair.second = true;
-                    return _pair;
+                    return this->end();
                 }
             }
             
-            iterator insert(iterator position, const value_type& val) {
-                key_type x = val.first;
+            iterator insert(const_iterator pos, const Key & x, const T & w) {
                 unsigned int s = this->_size;
                 if (this->_size == 0) {
                     this->_key[0] = x;
+                    this->_size++;
+                    //this->_value[0] = T();
+                    this->_value[0] = w;
+                    return this->begin();
+                } else {
+                    iterator it = this->begin();
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            this->_value[i] = w;
+                            return it;
+                        }
+                        if(x < this->_key[i]){
+                            int j;
+                            Key y = x;
+                            Key t;
+                            T u, v;
+                            
+                            for (j = i; j < s; j++) {
+                                t = this->_key[j];
+                                this->_key[j] = y;
+                                y = t;
+                                u = this->_value[j];
+                                this->_value[j] = v;
+                                v = u;
+                            }
+                            this->_key[j] = y;
+                            this->_value[j] = u;
+                            
+                            this->_size++;
+                            //this->_value[i] = T();
+                            this->_value[i] = w;
+                            return it;
+                        }
+                        it++;
+                    }
+                    this->_size++;
+                    this->_key[s] = x;
+                    //this->_value[s] = T();
+                    this->_value[s] = w;
+                    return this->end();
+                }
+            }
+
+            iterator	insertMulti(const Key & __key, const T & __value){
+                value_type val = pair<Key,T>(__key, __value);
+                unsigned int s = this->_size;
+                if (this->_size == 0) {
+                    this->_key[0] = val.first;
                     this->_size++;
                     //this->_value[0] = T();
                     this->_value[0] = val.second;
@@ -524,13 +510,9 @@ namespace std {
                 } else {
                     iterator it = this->begin();
                     for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == x) {
-                            return it;
-                        }
-                        //if(x < this->_key[i]){
-                        if (key_compare()(x, this->_key[i])) {
+                        if(val.first < this->_key[i] || this->_key[i] == val.first){
                             int j;
-                            Key y = x;
+                            Key y = val.first;
                             Key t;
                             T u, v;
                             
@@ -553,37 +535,54 @@ namespace std {
                         it++;
                     }
                     this->_size++;
-                    this->_key[s] = x;
+                    this->_key[s] = val.first;
                     //this->_value[s] = T();
                     this->_value[s] = val.second;
                     return this->end();
                 }
             }
             
-            void insert(iterator first, iterator last) {
-                for (iterator it = first; it.it_pos != last.it_pos; it++) {
-                    this->at(it.it_key[it.it_pos]) = it.it_value[it.it_pos];
-                }
-            }
-            
-            size_type erase(const key_type& k) {
-                if (this->_size != 0) {
-                    unsigned int s = this->_size;
+            iterator	insertMulti(const_iterator pos, const Key & x, const T & w){
+                unsigned int s = this->_size;
+                if (this->_size == 0) {
+                    this->_key[0] = x;
+                    this->_size++;
+                    //this->_value[0] = T();
+                    this->_value[0] = w;
+                    return this->begin();
+                } else {
+                    iterator it = this->begin();
                     for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == k) {
-                            this->_size--;
+                        if(x < this->_key[i] || this->_key[i] == x){
                             int j;
+                            Key y = x;
+                            Key t;
+                            T u, v;
+                            
                             for (j = i; j < s; j++) {
-                                this->_key[j] = this->_key[j + 1];
-                                this->_value[j] = this->_value[j + 1];
+                                t = this->_key[j];
+                                this->_key[j] = y;
+                                y = t;
+                                u = this->_value[j];
+                                this->_value[j] = v;
+                                v = u;
                             }
-                            this->_key[j - 1] = Key();
-                            this->_value[j - 1] = T();
-                            return this->_size;
+                            this->_key[j] = y;
+                            this->_value[j] = u;
+                            
+                            this->_size++;
+                            //this->_value[i] = T();
+                            this->_value[i] = w;
+                            return it;
                         }
+                        it++;
                     }
+                    this->_size++;
+                    this->_key[s] = x;
+                    //this->_value[s] = T();
+                    this->_value[s] = w;
+                    return this->end();
                 }
-                return this->_size;
             }
             
             void erase(iterator position) {
@@ -605,23 +604,15 @@ namespace std {
                 }
             }
             
-            void erase(iterator first, iterator last) {
-                if (this->_size != 0) {
-                    unsigned int s = this->_size;
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == first.it_key[first.it_pos]) {
-                            this->_size = this->_size - (last.it_pos - first.it_pos);
-                            int j;
-                            for (j = i; j < s; j++) {
-                                this->_key[j] = this->_key[j + last.it_pos];
-                                this->_value[j] = this->_value[j + last.it_pos];
-                            }
-                            this->_key[j - 1] = Key();
-                            this->_value[j - 1] = T();
-                            return;
-                        }
-                    }
-                }
+            bool contains(const Key & x) const {
+                unsigned int s = this->_size;
+                iterator it = this->begin();
+                if (this->_size == 0)
+                    return false;
+                for (int i = 0; i < s; i++)
+                    if (this->_key[i] == x)
+                        return true;
+                return false;
             }
             
             size_type count(key_type& x) {
@@ -636,6 +627,20 @@ namespace std {
                 return 0;
             }
             
+            size_type count() const{
+                return this->_size;
+            }
+            
+            T& first () {
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_value[0];
+            }
+            
+            const T& first () const {
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_value[0];
+            }
+            
             iterator find(const key_type& x) {
                 unsigned int s = this->_size;
                 iterator it = this->begin();
@@ -646,8 +651,7 @@ namespace std {
                         if (this->_key[i] == x) {
                             return it;
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()((Key &) x, this->_key[i])) {
+                        if(x < this->_key[i]){
                             int j;
                             Key y = x;
                             Key t;
@@ -665,7 +669,6 @@ namespace std {
                             this->_value[j] = u;
                             
                             this->_size++;
-                            //this->_value[i] = T();
                             this->_value[i] = T();
                             return it;
                         }
@@ -673,18 +676,89 @@ namespace std {
                     }
                     this->_size++;
                     this->_key[s] = x;
-                    //this->_value[s] = T();
                     this->_value[s] = T();
                     return this->end();
                 }
             }
             
-            key_compare key_comp() const {
-                return key_compare();
+            const_iterator find(const key_type& x) const {
+                unsigned int s = this->_size;
+                const_iterator it = this->begin();
+                if (this->_size == 0) {
+                    return it;
+                } else {
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            return it;
+                        }
+                        if(x < this->_key[i]){
+                            int j;
+                            Key y = x;
+                            Key t;
+                            T u, v;
+                            
+                            for (j = i; j < s; j++) {
+                                t = this->_key[j];
+                                this->_key[j] = y;
+                                y = t;
+                                u = this->_value[j];
+                                this->_value[j] = v;
+                                v = u;
+                            }
+                            this->_key[j] = y;
+                            this->_value[j] = u;
+                            
+                            this->_size++;
+                            this->_value[i] = T();
+                            return it;
+                        }
+                        it++;
+                    }
+                    this->_size++;
+                    this->_key[s] = x;
+                    this->_value[s] = T();
+                    return this->end();
+                }
             }
             
-            value_compare value_comp() const {
-                return value_compare(Compare());
+            const_iterator constFind(const key_type& x) const {
+                unsigned int s = this->_size;
+                const_iterator it = this->begin();
+                if (this->_size == 0) {
+                    return it;
+                } else {
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            return it;
+                        }
+                        if(x < this->_key[i]){
+                            int j;
+                            Key y = x;
+                            Key t;
+                            T u, v;
+                            
+                            for (j = i; j < s; j++) {
+                                t = this->_key[j];
+                                this->_key[j] = y;
+                                y = t;
+                                u = this->_value[j];
+                                this->_value[j] = v;
+                                v = u;
+                            }
+                            this->_key[j] = y;
+                            this->_value[j] = u;
+                            
+                            this->_size++;
+                            this->_value[i] = T();
+                            return it;
+                        }
+                        it++;
+                    }
+                    this->_size++;
+                    this->_key[s] = x;
+                    this->_value[s] = T();
+                    return this->end();
+                }
             }
             
             iterator lowerBound(const key_type& x) {
@@ -697,8 +771,26 @@ namespace std {
                         if (this->_key[i] == x) {
                             return it;
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()((Key&) x, this->_key[i])) {
+                        if(x < this->_key[i]){
+                            return this->end();
+                        }
+                        it++;
+                    }
+                    return this->end();
+                }
+            }
+            
+            const_iterator lowerBound(const key_type& x) const {
+                unsigned int s = this->_size;
+                if (this->_size == 0) {
+                    return this->end();
+                } else {
+                    const_iterator it = this->begin();
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            return it;
+                        }
+                        if(x < this->_key[i]){
                             return this->end();
                         }
                         it++;
@@ -718,8 +810,27 @@ namespace std {
                             it++;
                             return it;
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()((Key&) x, this->_key[i])) {
+                        if(x < this->_key[i]){
+                            return this->end();
+                        }
+                        it++;
+                    }
+                    return this->end();
+                }
+            }
+            
+            const_iterator upperBound(const key_type& x) const {
+                unsigned int s = this->_size;
+                if (this->_size == 0) {
+                    return this->end();
+                } else {
+                    const_iterator it = this->begin();
+                    for (int i = 0; i < s; i++) {
+                        if (this->_key[i] == x) {
+                            it++;
+                            return it;
+                        }
+                        if(x < this->_key[i]){
                             return this->end();
                         }
                         it++;
@@ -742,8 +853,7 @@ namespace std {
                             _pair.first = it;
                             return _pair;
                         }
-                        //if(x < this->_key[i]){
-                        if (key_compare()((Key&) k, this->_key[i])) {
+                        if(k < this->_key[i]){
                             _pair.first = this->upperBound(k);
                             return _pair;
                         }
@@ -754,640 +864,7 @@ namespace std {
                 }
             }
             
-#if 0
-            // modifiers:
-            pair<iterator,bool> insert ( const value_type& x );
-            iterator insert ( iterator position, const value_type& x );
-            void insert ( map<Key,T>::iterator first, map<Key,T>::iterator last );
-            //pair<iterator, bool> insert(const value_type& x);
-            //pair<iterator, bool> insert(const std::pair<Key,T>& x);
-            //map<Key,T>::iterator insert(map<Key,T>::iterator position, const value_type& x);
-            void insert( map<Key,T>::iterator position, std::pair<Key,T>& x);
-            
-            // map operations:
-            iterator find(const key_type& x);
-            const_iterator find(const key_type& x) const;
-            iterator lowerBound(const key_type& x);
-            //const_iterator lowerBound(const key_type& x) const;
-            iterator upperBound(const key_type& x);
-            //const_iterator upperBound(const key_type& x) const;
-            pair<iterator,iterator> equal_range(const key_type& x);
-            pair<const_iterator,const_iterator> equal_range(const key_type& x) const;
-            
-            // comparators:
-            
-            bool operator == (const map<Key,T,Compare>&) const;
-            bool operator != (const map<Key,T,Compare>&) const;
-            bool operator >= (const map<Key,T,Compare>&) const;
-            bool operator <= (const map<Key,T,Compare>&) const;
-            
-#endif
-        };
-        
-        template<class Key, class T, class Compare>
-        void swap(map<Key, T, Compare>&, vector<Key, T, Compare>&);
-        
-        template<class Key, class T, class Compare = less<Key> >
-        class multimap {
-        public:
-            typedef Key key_type;
-            typedef T mapped_type;
-            typedef pair<Key, T> value_type;
-            typedef Compare key_compare;
-            typedef int size_type;
-            
-            key_type _key[MAP_SIZE];
-            mapped_type _value[MAP_SIZE];
-            int _size;
-            
-            typedef bool (func)(Key, Key);
-            
-            class value_compare
-            {
-            public:
-                Compare comp;
-                value_compare (Compare c) : comp(c) {}  // constructed with multimap's comparison object
-                typedef bool result_type;
-                typedef value_type first_argument_type;
-                typedef value_type second_argument_type;
-                bool operator() ( value_type& x, value_type& y) const
-                {
-                    return comp(x.first, y.first);
-                }
-            };
-            
-            class iterator {
-            public:
-                
-                key_type* it_key;
-                mapped_type* it_value;
-                value_type it_pair;
-                int it_pos;
-                
-                iterator(const iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                }
-                iterator() {
-                    this->it_pos = -1;
-                }
-                iterator& operator=(const iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                    return *this;
-                }
-                
-                value_type * operator ->() {
-                    return &(this->it_pair);
-                }
-                
-                value_type & operator *() {
-                    return this->it_pair;
-                }
-                
-                iterator& operator ++() {
-                    this->it_pos++;
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                iterator operator ++(int) {
-                    this->it_pos++;
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                iterator& operator --() {
-                    this->it_pos--;
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                iterator operator --(int) {
-                    this->it_pos--;
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                bool operator ==(const iterator& it) const {
-                    if (this->it_pos == it.it_pos)
-                        return true;
-                    if ((this->it_pair.first == it.it_pair.first)
-                        && (this->it_pair.second == it.it_pair.second))
-                        return true;
-                    return false;
-                }
-                bool operator !=(const iterator& it) const {
-                    if (this->it_pos != it.it_pos)
-                        return true;
-                    if ((this->it_pair.first != it.it_pair.first)
-                        && (this->it_pair.second != it.it_pair.second))
-                        return true;
-                    return false;
-                }
-            };
-            
-            typedef iterator const_iterator;
-            
-            class reverse_iterator {
-            public:
-                
-                key_type* it_key;
-                mapped_type* it_value;
-                value_type it_pair;
-                int it_pos;
-                int* it_size;
-                
-                reverse_iterator(const reverse_iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                    this->it_size = x.it_size;
-                }
-                reverse_iterator() {
-                    this->it_pos = -1;
-                }
-                reverse_iterator& operator=(const reverse_iterator& x) {
-                    this->it_key = x.it_key;
-                    this->it_pos = x.it_pos;
-                    this->it_value = x.it_value;
-                    this->it_pair = x.it_pair;
-                    this->it_size = x.it_size;
-                    return *this;
-                }
-                
-                value_type * operator ->() {
-                    return &(this->it_pair);
-                }
-                
-                value_type & operator *() {
-                    return this->it_pair;
-                }
-                
-                reverse_iterator& operator ++() {
-                    if (this->it_pos == 0) {
-                        this->it_pos--;
-                        this->it_pair.first = Key();
-                        this->it_pair.second = T();
-                        return *this;
-                    }
-                    if (this->it_pos == -1) {
-                        this->it_pos = *(this->it_size) - 1;
-                    } else {
-                        this->it_pos--;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                reverse_iterator operator ++(int) {
-                    if (this->it_pos == 0) {
-                        this->it_pos--;
-                        this->it_pair.first = Key();
-                        this->it_pair.second = T();
-                        return *this;
-                    }
-                    if (this->it_pos == -1) {
-                        this->it_pos = *(this->it_size) - 1;
-                    } else {
-                        this->it_pos--;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                reverse_iterator& operator --() {
-                    if (this->it_pos == this->it_size) {
-                        this->it_pos = 0;
-                    } else {
-                        this->it_pos++;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                reverse_iterator operator --(int) {
-                    if (this->it_pos == this->it_size) {
-                        this->it_pos = 0;
-                    } else {
-                        this->it_pos++;
-                    }
-                    this->it_pair.first = this->it_key[this->it_pos];
-                    this->it_pair.second = this->it_value[this->it_pos];
-                    return *this;
-                }
-                
-                bool operator ==(const reverse_iterator& it) const {
-                    if (this->it_pos == it.it_pos)
-                        return true;
-                    if ((this->it_pair.first == it.it_pair.first)
-                        && (this->it_pair.second == it.it_pair.second))
-                        return true;
-                    return false;
-                }
-                bool operator !=(const reverse_iterator& it) const {
-                    if (this->it_pos != it.it_pos)
-                        return true;
-                    if ((this->it_pair.first != it.it_pair.first)
-                        && (this->it_pair.second != it.it_pair.second))
-                        return true;
-                    return false;
-                }
-            };
-            
-            explicit multimap(const key_compare& comp = key_compare()){
-                this->_size = 0;
-            }
-            
-            template<class InputIterator>
-            multimap(InputIterator first, InputIterator last, const key_compare& comp =
-                     key_compare()) {
-                int j = 0;
-                this->_size = 0;
-                int limit = last.it_pos - first.it_pos;
-                for (int i = first.it_pos; i != limit; i++, j++) {
-                    this->_key[j] = first.it_key[i];
-                    this->_value[j] = first.it_value[i];
-                    this->_size++;
-                }
-            }
-            
-            multimap(const multimap& x) {
-                this->clear();
-                this->_size = x._size;
-                for (int i = 0; i < x._size; i++) {
-                    this->_key[i] = x._key[i];
-                    this->_value[i] = x._value[i];
-                }
-            }
-            
-            ~multimap(){
-                this->clear();
-            }
-            
-            multimap& operator= (const multimap& x) {
-                this->clear();
-                this->_size = x._size;
-                for (int i = 0; i < x._size; i++) {
-                    this->_key[i] = x._key[i];
-                    this->_value[i] = x._value[i];
-                }
-                return *this;
-            }
-            
-            iterator insert(const value_type& val) {
-                key_type x = val.first;
-                size_type s = this->_size;
-                if (this->_size == 0) {
-                    this->_key[0] = x;
-                    this->_size++;
-                    this->_value[0] = val.second;
-                    return this->begin();
-                } else {
-                    iterator it = this->begin();
-                    for (int i = 0; i < s; i++) {
-                        if (key_compare()(x, this->_key[i])) {
-                            int j;
-                            Key y = x;
-                            Key t;
-                            T u, v;
-                            
-                            for (j = i; j < s; j++) {
-                                t = this->_key[j];
-                                this->_key[j] = y;
-                                y = t;
-                                u = this->_value[j];
-                                this->_value[j] = v;
-                                v = u;
-                            }
-                            this->_key[j] = y;
-                            this->_value[j] = u;
-                            
-                            this->_size++;
-                            this->_value[i] = val.second;
-                            it.it_pos = i;
-                            it.it_pair.first = this->_key[i];
-                            it.it_pair.second = this->_value[i];
-                            return it;
-                        }
-                        it++;
-                    }
-                    this->_size++;
-                    this->_key[s] = x;
-                    this->_value[s] = val.second;
-                    return this->end();
-                }
-            }
-            
-            const iterator insert(iterator position, const value_type& val) {
-                key_type x = val.first;
-                size_type s = this->_size;
-                if (this->_size == 0) {
-                    this->_key[0] = x;
-                    this->_size++;
-                    this->_value[0] = val.second;
-                    return this->begin();
-                } else {
-                    iterator it = this->begin();
-                    for (int i = 0; i < s; i++) {
-                        if (key_compare()(x, this->_key[i])) {
-                            int j;
-                            Key y = x;
-                            Key t;
-                            T u, v;
-                            
-                            for (j = i; j < s; j++) {
-                                t = this->_key[j];
-                                this->_key[j] = y;
-                                y = t;
-                                u = this->_value[j];
-                                this->_value[j] = v;
-                                v = u;
-                            }
-                            this->_key[j] = y;
-                            this->_value[j] = u;
-                            
-                            this->_size++;
-                            this->_value[i] = val.second;
-                            return it;
-                        }
-                        it++;
-                    }
-                    this->_size++;
-                    this->_key[s] = x;
-                    this->_value[s] = val.second;
-                    return this->end();
-                }
-            }
-            
-            void insert(iterator first, iterator last) {
-                value_type val;
-                for (iterator it = first; it.it_pos != last.it_pos; it++) {
-                    val.first = it.it_key[it.it_pos];
-                    val.second = it.it_value[it.it_pos];
-                    this->insert(val);
-                }
-            }
-            
-            bool empty() const{
-                if (this->_size == 0)
-                    return true;
-                return false;
-            }
-            size_type size(){
-                return this->_size;
-            }
-            size_type max_size() const{
-                return size_type();
-            }
-            
-            void clear() {
-                this->_size = 0;
-                for (int i = 0; i < this->_size; i++) {
-                    this->_key[i] = Key();
-                    this->_value[i] = T();
-                }
-            }
-            // iterators:
-            iterator begin() {
-                iterator it;
-                it.it_key = this->_key;
-                it.it_value = this->_value;
-                it.it_pos = 0;
-                it.it_pair.first = this->_key[0];
-                it.it_pair.second = this->_value[0];
-                return it;
-            }
-            iterator end() {
-                iterator it;
-                it.it_key = this->_key;
-                it.it_value = this->_value;
-                it.it_pos = this->_size;
-                it.it_pair.first = this->_key[it.it_pos];
-                it.it_pair.second = this->_value[it.it_pos];
-                return it;
-            }
-            
-            reverse_iterator rbegin() {
-                reverse_iterator it;
-                it.it_key = this->_key;
-                it.it_value = this->_value;
-                it.it_size = &(this->_size);
-                it.it_pos = this->_size - 1;
-                it.it_pair.first = this->_key[it.it_pos];
-                it.it_pair.second = this->_value[it.it_pos];
-                return it;
-            }
-            reverse_iterator rend() {
-                reverse_iterator it;
-                it.it_key = this->_key;
-                it.it_value = this->_value;
-                it.it_size = &(this->_size);
-                it.it_pos = -1;
-                it.it_pair.first = Key();
-                it.it_pair.second = T();
-                return it;
-            }
-            
-            iterator find (const key_type& x) {
-                size_type s = this->_size;
-                iterator it = this->begin();
-                if (this->_size == 0) {
-                    return it;
-                } else {
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == x) {
-                            return it;
-                        }
-                        if (key_compare()((Key &) x, this->_key[i])) {
-                            int j;
-                            Key y = x;
-                            Key t;
-                            T u, v;
-                            
-                            for (j = i; j < s; j++) {
-                                t = this->_key[j];
-                                this->_key[j] = y;
-                                y = t;
-                                u = this->_value[j];
-                                this->_value[j] = v;
-                                v = u;
-                            }
-                            this->_key[j] = y;
-                            this->_value[j] = u;
-                            
-                            this->_size++;
-                            this->_value[i] = T();
-                            return it;
-                        }
-                        it++;
-                    }
-                    this->_size++;
-                    this->_key[s] = x;
-                    this->_value[s] = T();
-                    return this->end();
-                }
-            }
-            
-            void swap(multimap& x) {
-                multimap tmp;
-                tmp = *this;
-                *this = x;
-                x = tmp;
-            }
-            void erase (iterator position) {
-                if (this->_size != 0) {
-                    unsigned int s = this->_size;
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == position.it_key[position.it_pos]) {
-                            this->_size--;
-                            int j;
-                            for (j = i; j < s; j++) {
-                                this->_key[j] = this->_key[j + 1];
-                                this->_value[j] = this->_value[j + 1];
-                            }
-                            this->_key[j - 1] = Key();
-                            this->_value[j - 1] = T();
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            size_type erase (const key_type& k) {
-                if (this->_size != 0) {
-                    unsigned int s = this->_size;
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == k) {
-                            this->_size--;
-                            int j;
-                            for (j = i; j < s; j++) {
-                                this->_key[j] = this->_key[j + 1];
-                                this->_value[j] = this->_value[j + 1];
-                            }
-                            this->_key[j - 1] = Key();
-                            this->_value[j - 1] = T();
-                            return this->_size;
-                        }
-                    }
-                }
-                return this->_size;
-            }
-            
-            void erase (iterator first, iterator last) {
-                if (this->_size != 0) {
-                    unsigned int s = this->_size;
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == first.it_key[first.it_pos]) {
-                            this->_size = this->_size - (last.it_pos - first.it_pos);
-                            int j;
-                            for (j = i; j < s; j++) {
-                                this->_key[j] = this->_key[j + last.it_pos];
-                                this->_value[j] = this->_value[j + last.it_pos];
-                            }
-                            this->_key[j - 1] = Key();
-                            this->_value[j - 1] = T();
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            key_compare key_comp() const {
-                return key_compare();
-            }
-            
-            value_compare value_comp() const {
-                return value_compare(Compare());
-            }
-            
-            iterator upperBound (const key_type& x) {
-                unsigned int s = this->_size;
-                if (this->_size == 0) {
-                    return this->end();
-                } else {
-                    iterator it = this->begin();
-                    for (int i = 0; i < s; i++) {
-                        if ( (this->_key[i] == x) && (this->_key[i+1] != x)) {
-                            it++;
-                            return it;
-                        }
-                        if (key_compare()((Key&) x, this->_key[i])) {
-                            return this->end();
-                        }
-                        it++;
-                    }
-                    return this->end();
-                }
-            }
-            
-            iterator lowerBound (const key_type& x) {
-                unsigned int s = this->_size;
-                if (this->_size == 0) {
-                    return this->end();
-                } else {
-                    iterator it = this->begin();
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == x) {
-                            return it;
-                        }
-                        if (key_compare()((Key&) x, this->_key[i])) {
-                            return this->end();
-                        }
-                        it++;
-                    }
-                    return this->end();
-                }
-            }
-            
-            pair<iterator,iterator> equal_range (const key_type& k) {
-                unsigned int s = this->_size;
-                pair<iterator, iterator> _pair;
-                _pair.second = this->upperBound(k);
-                if (this->_size == 0) {
-                    _pair.first = this->upperBound(k);
-                    return _pair;
-                } else {
-                    iterator it = this->begin();
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == k) {
-                            _pair.first = it;
-                            return _pair;
-                        }
-                        if (key_compare()((Key&) k, this->_key[i])) {
-                            _pair.first = this->upperBound(k);
-                            return _pair;
-                        }
-                        it++;
-                    }
-                    _pair.first = this->upperBound(k);
-                    return _pair;
-                }
-            }
-            
-            size_type count (const key_type& x) const {
-                if (this->_size != 0) {
-                    int s = this->_size;
-                    size_type c = 0;
-                    for (int i = 0; i < s; i++) {
-                        if (this->_key[i] == x) {
-                            c++;
-                        }
-                    }
-                    return c;
-                }
-                return 0;
-            }
-            
-            bool operator==( multimap& y ){
+            bool operator==( QMap<Key,T>& x, QMap<Key,T>& y){
                 if(this->_size != y._size)
                     return false;
                 for(int i = 0; i < this->_size; i++){
@@ -1397,7 +874,7 @@ namespace std {
                 return true;
             }
             
-            bool operator!=( multimap& y ){
+            bool operator!=( QMap<Key,T>& x, QMap<Key,T>& y){
                 if(this->_size != y._size)
                     return true;
                 for(int i = 0; i < this->_size; i++){
@@ -1407,30 +884,102 @@ namespace std {
                 return false;
             }
             
+            const Key &	firstKey() const{
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_key[0];
+            }
+            
+            const Key	key(const T & value, const Key & defaultKey = Key()) const{
+                for (int i = 0; i < this->_size; i++)
+                    if (this->_value[i] == value)
+                        return this->_key[i];
+                return defaultKey;
+            }
+            
+            /*
+            QList<Key>	keys(){
+                //TODO
+            }
+             
+            QList<Key>	keys(const T & value) const{
+                //TODO
+            }
+            */
+            
+            T &	last(){
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_value[this->_size - 1];
+            }
+            
+            const T &	last() const{
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_value[this->_size - 1];
+            }
+            
+            const Key &	lastKey() const{
+                __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+                return this->_key[this->_size - 1];
+            }
+            
+            int	remove(const Key & k){
+                int accum = 0;
+                for(iterator it = this->begin(); it != this->end(); it++){
+                    if (it.it_key[it.it_pos] == k) {
+                        this->erase(it);
+                        accum++;
+                    }
+                }
+                return accum;
+            }
+            
+            T	take(const Key & k){
+                T __tmp;
+                for(iterator it = this->begin(); it != this->end(); it++){
+                    if (it.it_key[it.it_pos] == k) {
+                        __tmp = it.it_value[it.it_pos];
+                        this->erase(it);
+                        return __tmp;
+                    }
+                }
+                return T();
+            }
+            
+            std::map<Key, T> toStdMap() const{
+                std::map<Key, T> other;
+                other._size = this->_size;
+                size_type s = this->_size;
+                for (int i = 0; i < s; i++) {
+                     other._key[i] = this->_key[i];
+                     other._value[i] = this->_value[i];
+                }
+                return other;
+            }
+            
+            /*
+            QList<Key>	uniqueKeys() const{
+                //TODO
+            }
+            */
+            
+            QMap<Key, T> &	unite(const QMap<Key, T> & other){
+                for (int i = 0; i < other._size; i++)
+                    this->insert(other._key[i], other._value[i]);
+                return *this;
+            }
+            
+            const T	value(const Key & k, const T & defaultValue = T()) const{
+                for (int i = 0; i < this->_size; i++)
+                    if (this->_key[i] == k)
+                        return this->_value[i];
+                return defaultValue;
+            }
+            
+            /*
+            QList<T>	values() const{
+                //TODO
+            }
+            */
         };
-#if 0
-        template< class Key, class T >
-        bool operator==( multimap<Key,T>& x, multimap<Key,T>& y){
-            if(x._size != y._size)
-                return false;
-            for(int i = 0; i < x._size; i++){
-                if((x._key[i] != y._key[i]) || (x._value[i] != y._value[i]))
-                    return false;
-            }
-            return true;
-        }
-        
-        template< class Key, class T >
-        bool operator!=( multimap<Key,T>& x, multimap<Key,T>& y){
-            if(x._size != y._size)
-                return true;
-            for(int i = 0; i < x._size; i++){
-                if((x._key[i] != y._key[i]) || (x._value[i] != y._value[i]))
-                    return true;
-            }
-            return false;
-        }
 #endif
-    }
-    
-#endif
+
+//EOF
