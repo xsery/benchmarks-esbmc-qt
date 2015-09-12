@@ -1,16 +1,829 @@
 /*******************************************************************\
+ 
+ Module: Qt
+ 
+ Author: Felipe Monteiro
+ 
+ Date: August 2015
+ 
+ \*******************************************************************/
 
-Module: 
+#ifndef __QHASH
+#define __QHASH
 
-Author: Mário Angel
+#include "../../utility"
+#include "QList"
 
-Date: 
+#define QHASH_SIZE 20
 
-\*******************************************************************/
-
+template<class Key, class T>
 class QHash {
 public:
-	QHash();
-	~QHash();
+    
+    typedef Key key_type;
+    typedef T mapped_type;
+    typedef pair<Key, T> value_type;
+    typedef unsigned int size_type;
+    
+    key_type _key[QHASH_SIZE];
+    mapped_type _value[QHASH_SIZE];
+    size_type _size;
+    
+    class iterator {
+    public:
+        
+        key_type* it_key;
+        mapped_type* it_value;
+        value_type it_pair;
+        int it_pos;
+        
+        iterator(const iterator& x) {
+            this->it_key = x.it_key;
+            this->it_pos = x.it_pos;
+            this->it_value = x.it_value;
+            this->it_pair = x.it_pair;
+        }
+        iterator() {
+            this->it_pos = -1;
+        }
+        const Key key(){
+            return it_pair.first;
+        }
+        T value(){
+            return it_pair.second;
+        }
+        iterator& operator=(const iterator& x) {
+            this->it_key = x.it_key;
+            this->it_pos = x.it_pos;
+            this->it_value = x.it_value;
+            this->it_pair = x.it_pair;
+            return *this;
+        }
+        
+        value_type * operator ->() {
+            return &(this->it_pair);
+        }
+        
+        value_type & operator *() {
+            return this->it_pair;
+        }
+        
+        iterator& operator ++() {
+            this->it_pos++;
+            this->it_pair.first = this->it_key[this->it_pos];
+            this->it_pair.second = this->it_value[this->it_pos];
+            return *this;
+        }
+        iterator operator ++(int) {
+            this->it_pos++;
+            this->it_pair.first = this->it_key[this->it_pos];
+            this->it_pair.second = this->it_value[this->it_pos];
+            return *this;
+        }
+        
+        iterator& operator --() {
+            this->it_pos--;
+            this->it_pair.first = this->it_key[this->it_pos];
+            this->it_pair.second = this->it_value[this->it_pos];
+            return *this;
+        }
+        iterator operator --(int) {
+            this->it_pos--;
+            this->it_pair.first = this->it_key[this->it_pos];
+            this->it_pair.second = this->it_value[this->it_pos];
+            return *this;
+        }
+        
+        bool operator ==(const iterator& it) const {
+            if (this->it_pos == it.it_pos)
+                return true;
+            if ((this->it_pair.first == it.it_pair.first)
+                && (this->it_pair.second == it.it_pair.second))
+                return true;
+            return false;
+        }
+        bool operator !=(const iterator& it) const {
+            if (this->it_pos != it.it_pos)
+                return true;
+            if ((this->it_pair.first != it.it_pair.first)
+                && (this->it_pair.second != it.it_pair.second))
+                return true;
+            return false;
+        }
+    };
+    
+    typedef iterator const_iterator;
+    typedef iterator Iterator;
+    typedef iterator Constterator;
+    
+    
+    QHash() {
+        this->_size = 0;
+    }
+    
+    QHash( QHash<Key, T>& x ) {
+        this->_size = x._size;
+        size_type s = x._size;
+        for (int i = 0; i < s; i++) {
+            this->_key[i] = x._key[i];
+            this->_value[i] = x._value[i];
+        }
+    }
+    
+    ~QHash(){
+        this->_size = 0;
+    }
+    
+    T& operator[](const Key& x) {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = x;
+            this->_size++;
+            this->_value[0] = T();
+            this->_key[this->_size + 1] = Key();
+            return this->_value[0];
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return this->_value[i];
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    this->_key[this->_size + 1] = Key();
+                    return this->_value[i];
+                }
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            this->_key[this->_size + 1] = Key();
+            return this->_value[s];
+        }
+    }
+    
+    const T& operator[](const Key& x) const {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = x;
+            this->_size++;
+            this->_value[0] = T();
+            this->_key[this->_size + 1] = Key();
+            return this->_value[0];
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return this->_value[i];
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    this->_key[this->_size + 1] = Key();
+                    return this->_value[i];
+                }
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            this->_key[this->_size + 1] = Key();
+            return this->_value[s];
+        }
+    }
+    
+    bool empty() const{
+        if (this->_size == 0)
+            return true;
+        return false;
+    }
+    
+    bool isEmpty() const{
+        if (this->_size == 0)
+            return true;
+        return false;
+    }
+    
+    iterator begin() {
+        iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = 0;
+        it.it_pair.first = this->_key[0];
+        it.it_pair.second = this->_value[0];
+        return it;
+    }
+    
+    const_iterator begin() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = 0;
+        it.it_pair.first = this->_key[0];
+        it.it_pair.second = this->_value[0];
+        return it;
+    }
+    
+    const_iterator cbegin() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = 0;
+        it.it_pair.first = this->_key[0];
+        it.it_pair.second = this->_value[0];
+        return it;
+    }
+    
+    const_iterator ConstBegin() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = 0;
+        it.it_pair.first = this->_key[0];
+        it.it_pair.second = this->_value[0];
+        return it;
+    }
+    
+    iterator end() {
+        iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = this->_size;
+        it.it_pair.first = this->_key[it.it_pos];
+        it.it_pair.second = this->_value[it.it_pos];
+        return it;
+    }
+    
+    const_iterator end() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = this->_size;
+        it.it_pair.first = this->_key[it.it_pos];
+        it.it_pair.second = this->_value[it.it_pos];
+        return it;
+    }
+    
+    const_iterator cend() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = this->_size;
+        it.it_pair.first = this->_key[it.it_pos];
+        it.it_pair.second = this->_value[it.it_pos];
+        return it;
+    }
+    
+    const_iterator ConstEnd() const {
+        const_iterator it;
+        it.it_key = this->_key;
+        it.it_value = this->_value;
+        it.it_pos = this->_size;
+        it.it_pair.first = this->_key[it.it_pos];
+        it.it_pair.second = this->_value[it.it_pos];
+        return it;
+    }
+    
+    size_type size() const {
+        return this->_size;
+    }
+    
+    QHash<Key, T>& operator=(const QHash<Key, T> & x) {
+        this->clear();
+        this->_size = x._size;
+        for (int i = 0; i < x._size; i++) {
+            this->_key[i] = x._key[i];
+            this->_value[i] = x._value[i];
+        }
+        return *this;
+    }
+    
+    void clear() {
+        this->_size = 0;
+        for (int i = 0; i < this->_size; i++) {
+            this->_key[i] = Key();
+            this->_value[i] = T();
+        }
+    }
+    
+    void swap(QHash<Key, T> & x) {
+        QHash tmp;
+        tmp = *this;
+        *this = x;
+        x = tmp;
+    }
+    
+    iterator insert(Key __key, T __value) {
+        value_type val = pair<Key,T>(__key, __value);
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = val.first;
+            this->_size++;
+            this->_value[0] = val.second;
+            return this->begin();
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == val.first) {
+                    this->_value[i] = __value;
+                    return it;
+                }
+                if(val.first < this->_key[i]){
+                    int j;
+                    Key y = val.first;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j <= s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    
+                    this->_size++;
+                    this->_value[i] = val.second;
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = val.first;
+            this->_value[s] = val.second;
+            return this->end();
+        }
+    }
+    
+    iterator	insertMulti(const Key & __key, const T & __value){
+        value_type val = pair<Key,T>(__key, __value);
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = val.first;
+            this->_size++;
+            this->_value[0] = val.second;
+            return this->begin();
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if(val.first < this->_key[i] || this->_key[i] == val.first){
+                    int j;
+                    Key y = val.first;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j <= s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    
+                    this->_size++;
+                    this->_value[i] = val.second;
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = val.first;
+            this->_value[s] = val.second;
+            return this->end();
+        }
+    }
+    
+    void erase(iterator position) {
+        if (this->_size != 0) {
+            unsigned int s = this->_size;
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == position.it_key[position.it_pos]) {
+                    this->_size--;
+                    int j;
+                    for (j = i; j < s; j++) {
+                        this->_key[j] = this->_key[j + 1];
+                        this->_value[j] = this->_value[j + 1];
+                    }
+                    this->_key[j - 1] = Key();
+                    this->_value[j - 1] = T();
+                    return;
+                }
+            }
+        }
+    }
+    
+    bool contains(const Key & x) const {
+        unsigned int s = this->_size;
+        iterator it = this->begin();
+        if (this->_size == 0)
+            return false;
+        for (int i = 0; i < s; i++)
+            if (this->_key[i] == x)
+                return true;
+        return false;
+    }
+    
+    size_type count(key_type& x) {
+        if (this->_size != 0) {
+            int s = this->_size;
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+    
+    size_type count() const{
+        return this->_size;
+    }
+    
+    T& first () {
+        __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+        return this->_value[0];
+    }
+    
+    const T& first () const {
+        __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+        return this->_value[0];
+    }
+    
+    iterator find(const key_type& x) {
+        unsigned int s = this->_size;
+        iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            return this->end();
+        }
+    }
+    
+    const_iterator find(const key_type& x) const {
+        unsigned int s = this->_size;
+        const_iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            return this->end();
+        }
+    }
+    
+    const_iterator constFind(const key_type& x) const {
+        unsigned int s = this->_size;
+        const_iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j < s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_key[j] = y;
+                    this->_value[j] = u;
+                    
+                    this->_size++;
+                    this->_value[i] = T();
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = x;
+            this->_value[s] = T();
+            return this->end();
+        }
+    }
+    
+    iterator lowerBound(const key_type& x) {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            return this->end();
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    return this->end();
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    const_iterator lowerBound(const key_type& x) const {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            return this->end();
+        } else {
+            const_iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    return this->end();
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    iterator upperBound(const key_type& x) {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            return this->end();
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    it++;
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    return this->end();
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    const_iterator upperBound(const key_type& x) const {
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            return this->end();
+        } else {
+            const_iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == x) {
+                    it++;
+                    return it;
+                }
+                if(x < this->_key[i]){
+                    return this->end();
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    pair<iterator, iterator> equal_range(const key_type& k) {
+        unsigned int s = this->_size;
+        pair<iterator, iterator> _pair;
+        _pair.second = this->upperBound(k);
+        if (this->_size == 0) {
+            _pair.first = this->upperBound(k);
+            return _pair;
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == k) {
+                    _pair.first = it;
+                    return _pair;
+                }
+                if(k < this->_key[i]){
+                    _pair.first = this->upperBound(k);
+                    return _pair;
+                }
+                it++;
+            }
+            _pair.first = this->upperBound(k);
+            return _pair;
+        }
+    }
+    
+    bool operator==( QHash<Key,T>& x, QHash<Key,T>& y){
+        if(this->_size != y._size)
+            return false;
+        for(int i = 0; i < this->_size; i++){
+            if((this->_key[i] != y._key[i]) || (this->_value[i] != y._value[i]))
+                return false;
+        }
+        return true;
+    }
+    
+    bool operator!=( QHash<Key,T>& x, QHash<Key,T>& y){
+        if(this->_size != y._size)
+            return true;
+        for(int i = 0; i < this->_size; i++){
+            if((this->_key[i] != y._key[i]) || (this->_value[i] != y._value[i]))
+                return true;
+        }
+        return false;
+    }
+    
+    const Key	key(const T & value, const Key & defaultKey = Key()) const{
+        for (int i = 0; i < this->_size; i++)
+            if (this->_value[i] == value)
+                return this->_key[i];
+        return defaultKey;
+    }
+    
+    const Key	key(const T & value ) const{
+        if (this->empty())
+            return Key();
+        return this->_key[this->_size - 1];
+    }
+    
+    T &	last(){
+        __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+        return this->_value[this->_size - 1];
+    }
+    
+    const T &	last() const{
+        __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+        return this->_value[this->_size - 1];
+    }
+    
+    const Key &	lastKey() const{
+        __ESBMC_assert(this->_size != 0, "Conatiner is empty");
+        return this->_key[this->_size - 1];
+    }
+    
+    int	remove(const Key & k){
+        int accum = 0;
+        for(iterator it = this->begin(); it != this->end(); it++){
+            if (it.it_key[it.it_pos] == k) {
+                this->erase(it);
+                accum++;
+            }
+        }
+        return accum;
+    }
+    
+    T	take(const Key & k){
+        T __tmp;
+        for(iterator it = this->begin(); it != this->end(); it++){
+            if (it.it_key[it.it_pos] == k) {
+                __tmp = it.it_value[it.it_pos];
+                this->erase(it);
+                return __tmp;
+            }
+        }
+        return T();
+    }
+    
+    void reserve(int size){
+        __ESBMC_assert(size >= 0, "Invalid parameter.");
+    }
+    
+    void	squeeze(){
+        //DISCUSS
+    }
+    
+    QHash<Key, T> &	unite(const QHash<Key, T> & other){
+        for (int i = 0; i < other._size; i++)
+            this->insert(other._key[i], other._value[i]);
+        return *this;
+    }
+    
+    const T	value(const Key & k, const T & defaultValue = T()) const{
+        for (int i = 0; i < this->_size; i++)
+            if (this->_key[i] == k)
+                return this->_value[i];
+        return defaultValue;
+    }
+    
+    const T	value(const Key & key) const{
+        if (this->empty())
+            return T();
+        return this->_value[this->_size - 1];
+    }
+    
+    /*
+     QList<T>	values() {
+     //TODO
+     }
+     
+     QList<T>	values(const Key & key) const{
+     //TODO
+     }
+     
+     QList<Key>	uniqueKeys() const{
+     //TODO
+     }
+     
+     QList<Key>	keys(){
+     //TODO
+     }
+     
+     QList<Key>	keys(const T & value) const{
+     //TODO
+     }
+     */
 };
 
+#endif
+//EOF
