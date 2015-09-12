@@ -31,6 +31,10 @@ public:
         //TODO
     //}
     
+    size_type size(){
+        return this->_size;
+    }
+
     QMultiMap(const QMap<Key, T> & other){
         this->clear();
         this->_size = other._size;
@@ -47,16 +51,89 @@ public:
             return it;
         } else {
             for (int i = 0; i < s; i++) {
-                if (this->_key[i] == x) {
+                if (this->_key[i] == key && this->_value[i] == value) {
                     return it;
                 }
-                if(x < this->_key[i]){
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    bool	contains(const Key & key, const T & value) const {
+        unsigned int s = this->_size;
+        iterator it = this->begin();
+        if (this->_size == 0)
+            return false;
+        for (int i = 0; i < s; i++)
+            if (this->_key[i] == key && this->_value[i] == value)
+                return true;
+        return false;
+    }
+    
+    size_type	count(const Key & key, const T & value) const{
+        if (this->_size != 0) {
+            int s = this->_size;
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == key && this->_value[i] == value) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+    
+    QMap<Key, T>::iterator	find(const Key & key, const T & value) {
+        unsigned int s = this->_size;
+        iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == key && this->_value[i] == value) {
+                    return it;
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    QMap<Key, T>::const_iterator	find(const Key & key, const T & value) const {
+        unsigned int s = this->_size;
+        const_iterator it = this->begin();
+        if (this->_size == 0) {
+            return it;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == key && this->_value[i] == value) {
+                    return it;
+                }
+                it++;
+            }
+            return this->end();
+        }
+    }
+    
+    QMap<Key, T>::iterator	insert(const Key & key, const T & value){
+        value_type val = pair<Key,T>(key, value);
+        size_type s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = val.first;
+            this->_value[0] = val.second;
+            this->_size++;
+            return this->begin();
+        } else {
+            QMap<Key, T>::iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if(val.first < this->_key[i] || this->_key[i] == key ){
                     int j;
-                    Key y = x;
-                    Key t;
-                    T u, v;
+                    Key y = val.first;
+                    Key t = Key();
+                    T u = T();
+                    T v = val.second;
                     
-                    for (j = i; j < s; j++) {
+                    for (j = i; j <= s; j++) {
                         t = this->_key[j];
                         this->_key[j] = y;
                         y = t;
@@ -64,64 +141,126 @@ public:
                         this->_value[j] = v;
                         v = u;
                     }
-                    this->_key[j] = y;
-                    this->_value[j] = u;
-                    
                     this->_size++;
-                    this->_value[i] = T();
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = val.first;
+            this->_value[s] = val.second;
+            return this->end();
+        }
+    }
+    
+    QMap<Key, T>::iterator	insert(QMap<Key, T>::const_iterator pos, const Key & x, const T & w){
+        unsigned int s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = x;
+            this->_size++;
+            this->_value[0] = w;
+            return this->begin();
+        } else {
+            iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if(x < this->_key[i] || this->_key[i] == x){
+                    int j;
+                    Key y = x;
+                    Key t;
+                    T u, v;
+                    
+                    for (j = i; j <= s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_size++;
                     return it;
                 }
                 it++;
             }
             this->_size++;
             this->_key[s] = x;
-            this->_value[s] = T();
+            this->_value[s] = w;
             return this->end();
         }
     }
     
-    bool	contains(const Key & key, const T & value) const{
-        //TODO
-    }
-    
-    int	count(const Key & key, const T & value) const{
-        //TODO
-    }
-    
-    QMap<Key, T>::iterator	find(const Key & key, const T & value){
-        //TODO
-    }
-    
-    QMap<Key, T>::const_iterator	find(const Key & key, const T & value) const{
-        //TODO
-    }
-    
-    QMap<Key, T>::iterator	insert(const Key & key, const T & value){
-        //TODO
-    }
-    
-    QMap<Key, T>::iterator	insert(QMap<Key, T>::const_iterator pos, const Key & key, const T & value){
-        //TODO
-    }
-    
     int	remove(const Key & key, const T & value){
-        //TODO
+        int accum = 0;
+        for(iterator it = this->begin(); it != this->end(); it++){
+            if (it.it_key[it.it_pos] == key && it.it_value[it.it_pos] == value) {
+                this->erase(it);
+                accum++;
+            }
+        }
+        return accum;
     }
     
     QMap<Key, T>::iterator	replace(const Key & key, const T & value){
-        //TODO
+        value_type val = pair<Key,T>(key, value);
+        size_type s = this->_size;
+        if (this->_size == 0) {
+            this->_key[0] = val.first;
+            this->_value[0] = val.second;
+            this->_size++;
+            return this->begin();
+        } else {
+            QMap<Key, T>::iterator it = this->begin();
+            for (int i = 0; i < s; i++) {
+                if (this->_key[i] == val.first) {
+                    this->_value[i] = value;
+                    return it;
+                }
+                if(val.first < this->_key[i]){
+                    int j;
+                    Key y = val.first;
+                    Key t = Key();
+                    T u = T();
+                    T v = val.second;
+                    
+                    for (j = i; j <= s; j++) {
+                        t = this->_key[j];
+                        this->_key[j] = y;
+                        y = t;
+                        u = this->_value[j];
+                        this->_value[j] = v;
+                        v = u;
+                    }
+                    this->_size++;
+                    return it;
+                }
+                it++;
+            }
+            this->_size++;
+            this->_key[s] = val.first;
+            this->_value[s] = val.second;
+            return this->end();
+        }
     }
     
     void	swap(QMultiMap<Key, T> & other){
-        //TODO
+        QMultiMap tmp;
+        tmp = *this;
+        *this = other;
+        other = tmp;
     }
     
-    QMultiMap	operator+(const QMultiMap & other) const{
-        //TODO
+    QMultiMap<Key,T>	operator+( QMultiMap<Key,T> & other ){
+        for (int i = 0; i < other.size(); i++) {
+            this->insert(other._key[i], other._value[i]);
+        }
+        return *this;
     }
     
-    QMultiMap &	operator+=(const QMultiMap & other){
-        //TODO
+    QMultiMap<Key,T> &	operator+=( QMultiMap<Key,T> & other ){
+        for (int i = 0; i < other.size(); i++) {
+            this->insert(other._key[i], other._value[i]);
+        }
+        return *this;
     }
 };
 
