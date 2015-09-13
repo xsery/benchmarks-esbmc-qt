@@ -1,6 +1,4 @@
-#include <QtCore>
-
-
+#include <QThread>
 #include <iostream>
 using namespace std;
 
