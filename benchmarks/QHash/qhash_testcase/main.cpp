@@ -1,12 +1,11 @@
-#include <QHash>
 #include <cassert>
+#include <QHash>
 #include <QString>
-#include <iostream>
-
 using namespace std;
 
 int main ()
 {
     QHash<QString, int> hash;
+    assert(hash.size() == 0);
     return 0;
 }
