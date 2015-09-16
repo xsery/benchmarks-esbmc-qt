@@ -1,0 +1,26 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef _QAPPLICATION_H__
+#define _QAPPLICATION_H__
+
+#include "QtWidgets/QDesktopWidget"
+
+class QApplication {
+public:
+	QApplication(int &argc, char **argv){ __ESBMC_assert(0, "fuck"); }
+	QApplication(){ __ESBMC_assert(0, "fuck"); }
+	~QApplication();
+
+
+QDesktopWidget *desktop();
+};
+
+#endif /* _QAPPLICATION_H__ */
+

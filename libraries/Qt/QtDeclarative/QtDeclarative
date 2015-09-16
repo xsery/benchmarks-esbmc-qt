@@ -1,0 +1,7 @@
+#ifndef QT_QTDECLARATIVE_MODULE_H
+#define QT_QTDECLARATIVE_MODULE_H
+
+#include "QDeclarativeView"
+
+#endif
+

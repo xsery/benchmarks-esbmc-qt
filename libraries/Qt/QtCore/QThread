@@ -82,15 +82,3 @@ protected:
 }; //QThread class
 
 #endif // QTHREAD_H
-
-
-
-
-
-
-
-
-
-
-
-

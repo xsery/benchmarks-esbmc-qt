@@ -1,0 +1,17 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef _QTWIDGETS_MODULE_H
+#define _QTWIDGETS_MODULE_H
+
+#include "QApplication"
+#include "QDesktopWidget"
+#include "QWidget"
+
+#endif //_QTWIDGETS_MODULE_H

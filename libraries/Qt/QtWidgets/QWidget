@@ -1,0 +1,20 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef _QWIDGET_H__
+#define _QWIDGET_H__
+
+class QWidget {
+public:
+        QWidget();
+	~QWidget();
+}; 
+
+#endif //_QWIDGET_H__
+

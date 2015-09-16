@@ -1,0 +1,19 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef __QDECLARATIVEVIEW_H__
+#define __QDECLARATIVEVIEW_H__
+
+class QDeclarativeView {
+public:
+	QDeclarativeView();
+	~QDeclarativeView();
+};
+
+#endif /* __QDECLARATIVEVIEW_H__ */

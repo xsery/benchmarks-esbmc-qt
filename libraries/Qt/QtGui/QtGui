@@ -1,3 +1,8 @@
+#ifndef QtGUI_H
+#define QtGUI_H
+
+#include "../QtWidgets/QMainWindow"
+#include "../QtWidgets/QApplication"
 #include "string"
 #include "../../fstream"
 
@@ -747,3 +752,5 @@ public:
 
 template<typename T>
 	T	qFindChild ( const Window * name ) const{}
+
+#endif // QtGUI_H

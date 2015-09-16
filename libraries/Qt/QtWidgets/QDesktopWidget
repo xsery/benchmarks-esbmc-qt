@@ -1,0 +1,20 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef __QDESKTOPWIDGET_H__
+#define __QDESKTOPWIDGET_H__
+
+class QDesktopWidget {
+public:
+	QDesktopWidget();
+	~QDesktopWidget();
+};
+
+#endif /* __QDESKTOPWIDGET_H__ */
+

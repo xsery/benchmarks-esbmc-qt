@@ -1,0 +1,21 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef _QMAINWINDOW_H
+#define _QMAINWINDOW_H
+
+#include "QWidget"
+
+class QMainWindow {
+public:
+        QMainWindow(QWidget *parent = 0);
+	QMainWindow();
+	~QMainWindow();
+};
+#endif // QMAINWINDOW_H
