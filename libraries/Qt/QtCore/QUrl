@@ -9,7 +9,16 @@ Date:
 \*******************************************************************/
 
 class QUrl {
+
+private:
+  char *strUrl;
+
 public:
-	QUrl();
-	~QUrl();
+	QUrl(){}
+	QUrl(char* str)
+        {
+           __ESBMC_assert( str != NULL, "invalid parameter");
+	   strUrl = str;
+        }
+	~QUrl(){}
 };

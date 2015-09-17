@@ -10,12 +10,16 @@ Date:
 #ifndef _QMAINWINDOW_H
 #define _QMAINWINDOW_H
 
-#include "QWidget"
+#include "../QtDeclarative/QDeclarativeView"
+#include "QDesktopWidget"
+#include "QtWidgets/QWidget"
 
 class QMainWindow {
 public:
-        QMainWindow(QWidget *parent = 0);
-	QMainWindow();
-	~QMainWindow();
+	QMainWindow(){}
+	QMainWindow(QDesktopWidget *parent = 0){}
+	void setCentralWidget (QWidget* widget ){}
+        void setCentralWidget (QDeclarativeView* widget ){}
+	~QMainWindow(){}
 };
 #endif // QMAINWINDOW_H

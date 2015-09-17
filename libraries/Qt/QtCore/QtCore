@@ -3,7 +3,9 @@
 
 #include "QtDefines.h"
 #include "QMutex"
+#include "qnamespace.h"
 #include "QThread"
+#include "QUrl"
 
 
 void qWarning ( const char * msg, ... ){}

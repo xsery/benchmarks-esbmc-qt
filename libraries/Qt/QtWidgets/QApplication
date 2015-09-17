@@ -10,16 +10,18 @@ Date:
 #ifndef _QAPPLICATION_H__
 #define _QAPPLICATION_H__
 
-#include "QtWidgets/QDesktopWidget"
-
 class QApplication {
 public:
-	QApplication(int &argc, char **argv){ __ESBMC_assert(0, "fuck"); }
-	QApplication(){ __ESBMC_assert(0, "fuck"); }
-	~QApplication();
-
-
-QDesktopWidget *desktop();
+	enum Encoding{ UnicodeUTF8 };
+	QApplication( int & argc, char ** argv ){
+		__ESBMC_assert(argc > 0, "invalid parameter");
+	}
+        QApplication(){}
+	int exec(){}
+	QDesktopWidget *desktop(){}
+	//static QString translate ( const char * context, const char * sourceText, int disambiguation, Encoding encoding, int n = 0){}	
+	
+	~QApplication(){}
 };
 
 #endif /* _QAPPLICATION_H__ */

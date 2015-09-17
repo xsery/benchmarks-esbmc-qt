@@ -3,6 +3,10 @@
 
 #include"../../definitions.h"
 
+//#define QT_VERSION 0x050500
+
+//#define QT_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
+
 #undef LONG_MAX
 #define LONG_MAX __LONG_MAX__
 

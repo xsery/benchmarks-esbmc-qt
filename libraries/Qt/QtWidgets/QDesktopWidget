@@ -10,6 +10,8 @@ Date:
 #ifndef __QDESKTOPWIDGET_H__
 #define __QDESKTOPWIDGET_H__
 
+#include "QWidget"
+
 class QDesktopWidget {
 public:
 	QDesktopWidget();

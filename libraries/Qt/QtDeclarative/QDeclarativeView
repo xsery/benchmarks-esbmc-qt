@@ -10,10 +10,16 @@ Date:
 #ifndef __QDECLARATIVEVIEW_H__
 #define __QDECLARATIVEVIEW_H__
 
+#include "../QtCore/QtCore"
+
 class QDeclarativeView {
 public:
-	QDeclarativeView();
-	~QDeclarativeView();
+	enum ResizeMode { SizeViewToRootObject, SizeRootObjectToView };
+	QDeclarativeView(){}
+	~QDeclarativeView(){}
+
+	void setSource(const QUrl&){}
+	void setResizeMode(ResizeMode){}
 };
 
 #endif /* __QDECLARATIVEVIEW_H__ */

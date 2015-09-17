@@ -12,9 +12,27 @@ Date:
 
 class QWidget {
 public:
-        QWidget();
-	~QWidget();
+        QWidget(){}
+	QWidget( QWidget* ){}
+	//void setLayout ( QLayout * layout ){}
+	void show (){}
+	void setWindowTitle ( const char* str ){}
+	void setParent ( QWidget * parent ){}
+	//void setWindowTitle ( const QString & ){}
+	void resize ( int w, int h ){
+		__ESBMC_assert(w >= 0, "First parameter must be greater or equal than zero.");
+		__ESBMC_assert(h >= 0, "First parameter must be greater or equal than zero.");
+	}
+	//void	setPalette ( const QPalette & ){}
+	//QString	objectName () const{}
+	//void	setObjectName ( const QString & name ){}
+	bool isEnabled () const{}
+	void setEnabled ( bool ){}
+	~QWidget(){}
 }; 
 
-#endif //_QWIDGET_H__
+void show(){}
+void showMaximized(){}
+void setAttribute(Qt::WidgetAttribute, bool on = true){}
 
+#endif //_QWIDGET_H__

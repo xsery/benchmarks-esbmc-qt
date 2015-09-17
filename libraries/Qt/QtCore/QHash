@@ -264,7 +264,7 @@ public:
         return it;
     }
     
-    const_iterator ConstBegin() const {
+    const_iterator constBegin() const {
         const_iterator it;
         it.it_key = this->_key;
         it.it_value = this->_value;
@@ -304,7 +304,7 @@ public:
         return it;
     }
     
-    const_iterator ConstEnd() const {
+    const_iterator constEnd() const {
         const_iterator it;
         it.it_key = this->_key;
         it.it_value = this->_value;
@@ -315,6 +315,10 @@ public:
     }
     
     size_type size() const {
+        return this->_size;
+    }
+
+    size_type capacity() const {
         return this->_size;
     }
     
