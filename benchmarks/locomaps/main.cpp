@@ -23,7 +23,8 @@
 
 #include "mainwindow.h"
 
-#include <QtGui/QApplication>
+#include <QtGui>
+//#include <QtGui/QApplication>
 
 int main(int argc, char *argv[])
 {

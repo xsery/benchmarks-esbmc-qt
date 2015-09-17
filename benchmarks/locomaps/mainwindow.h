@@ -24,7 +24,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative>
+//#include <QtDeclarative/QDeclarativeView>
 #include <QDesktopWidget>
 
 namespace Ui {
@@ -33,7 +34,7 @@ namespace Ui {
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
@@ -42,7 +43,7 @@ public:
     };
 
     explicit MainWindow(QDesktopWidget *parent = 0);
-    virtual ~MainWindow();
+    ~MainWindow();
 
     // Note that this will only have an effect on Symbian and Fremantle.
     void setOrientation(ScreenOrientation orientation);
