@@ -1,0 +1,9 @@
+#ifndef _QTNETWORK_H
+#define _QTNETWORK_H
+
+#include "QNetworkInterface"
+#include "QUdpSocket"
+
+
+#endif //_QTNETWORK_H
+

@@ -1,3 +1,6 @@
+#ifndef __QTGUI_H__
+#define __QTGUI_H__
+
 #include <string>
 #include <fstream>
 
@@ -52,21 +55,6 @@ int qrand();
 template <class T>
 	QT_TRANSLATE_NOOP ( T context, const char* sourceText );
 
-class QString
-{
-	std::string str;
-public:
-	QString (){}
-	QString ( const char * unicode ){
-		__ESBMC_assert(unicode != NULL, "Invalid string");
-	}
-	std::string	toStdString () const{}
-	bool isEmpty () const{}
-	~QString (){}
-};
-
-QString fromUtf8 ( const char * str, int size = -1 ){}
-
 class QColor
 {
 public:
@@ -104,31 +92,6 @@ public:
 	enum ColorRole{ WindowText };
 	QPalette(){}
 	void	setColor ( ColorRole role, const Qt::GlobalColor & color ){}
-};
-
-class QWidget 
-{
-public:
-	QWidget(){}
-	QWidget( QWidget* ){}
-	template< class T>
-		void setLayout ( T * layout ){}
-	void setLayout ( void * layout ){}
-	//void setLayout ( QVBoxLayout * layout ){}
-	//void setLayout ( void * layout ){}
-	void show (){}
-	void setWindowTitle ( const char* str ){}
-	void setParent ( QWidget * parent ){}
-	void setWindowTitle ( const QString & ){}
-	void resize ( int w, int h ){
-		__ESBMC_assert(w >= 0, "First parameter must be greater or equal than zero.");
-		__ESBMC_assert(h >= 0, "First parameter must be greater or equal than zero.");
-	}
-	void	setPalette ( const QPalette & ){}
-	QString	objectName () const{}
-	void	setObjectName ( const QString & name ){}
-	bool isEnabled () const{}
-	void setEnabled ( bool ){}
 };
 
 class QPushButton{
@@ -858,3 +821,5 @@ public:
 
 template<typename T>
 	T	qFindChild ( const Window * name ) const{}
+
+#endif /* _QTGUI_H__ */

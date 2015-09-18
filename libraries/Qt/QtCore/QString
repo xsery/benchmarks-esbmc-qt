@@ -6,9 +6,13 @@ Author: Felipe Rodrigues
 
 \*******************************************************************/
 
+#ifndef _QSTRING_H
+#define _QSTRING_H
+
 #include "string"
 #include "../../cstddef"
 #include "../../cstring"
+#include "QTextStream"
 
 class QString
 {
@@ -25,9 +29,12 @@ public:
 		this->str = unicode;
 		this->_size = strlen(unicode);
 	}
-	std::string	toStdString () const{
-        return std::string(this->str);
-    }
+	std::string	toStdString () const
+        {
+            return std::string(this->str);
+        }
+
+        bool isEmpty () const{}
 	~QString (){}
 
 	bool operator ==(const QString& x) const {
@@ -48,3 +55,7 @@ public:
 		return true;
 	}
 };
+
+QString fromUtf8 ( const char * str, int size = -1 ){}
+
+#endif

@@ -8,13 +8,16 @@ Date:
 
 \*******************************************************************/
 
-#ifndef _QTEXTSTREAM_H
-#define _QTEXTSTREAM_H
+#ifndef _QUDPSOCKET_H
+#define _QUDPSOCKET_H
 
-class QTextStream {
+class QUdpSocket {
 public:
-	QTextStream();
-	~QTextStream();
+	QUdpSocket();
+	~QUdpSocket();
 };
 
-#endif //_QTEXTSTREAM_H
+#endif //_QUDPSOCKET_H
+
+
+

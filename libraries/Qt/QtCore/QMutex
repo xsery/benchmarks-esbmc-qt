@@ -10,7 +10,7 @@ Date:
 #ifndef QMUTEX_H
 #define QMUTEX_H
 
-#include "QtDefines.h"
+#include "../QtDefines.h"
 #include <pthread.h>
 
 class QMutex {

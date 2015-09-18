@@ -1,9 +1,10 @@
-#ifndef QT_QTCORE_MODULE_H
-#define QT_QTCORE_MODULE_H
+#ifndef __QTCORE_H__
+#define __QTCORE_H__
 
 #include "QtDefines.h"
 #include "QMutex"
 #include "qnamespace.h"
+#include "QTextStream"
 #include "QThread"
 #include "QUrl"
 
@@ -19,4 +20,4 @@ public:
 	~QEvent();
 };
 
-#endif //QT_QTCORE_MODULE_H
+#endif //__QTCORE_H__
