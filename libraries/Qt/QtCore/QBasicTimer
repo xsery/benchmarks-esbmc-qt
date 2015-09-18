@@ -7,9 +7,19 @@ Author: Felipe Rodrigues
 Date: 
 
 \*******************************************************************/
+#include "QObject"
 
 class QBasicTimer {
+    int __time;
 public:
-	QBasicTimer();
-	~QBasicTimer();
+    QBasicTimer(){}
+    ~QBasicTimer(){}
+    bool	isActive() const{}
+    void	start(int msec, QObject * object){
+        __ESBMC_assert(msec >= 0, "Invalid parameter.");
+        __time = msec;
+    }
+    //void	start(int msec, Qt::TimerType timerType, QObject * obj){}
+    void	stop(){}
+    int	timerId() const{}
 };
