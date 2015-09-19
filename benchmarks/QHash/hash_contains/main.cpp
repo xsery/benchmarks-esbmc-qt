@@ -1,11 +1,24 @@
 #include <cassert>
 #include <QHash>
-#include <QString>
+#include <iostream>
+
 using namespace std;
 
 int main ()
 {
-    QHash<QString, int> hash;
-    assert(hash.size() == 0);
+    QHash<int, int> myQHash;
+    QHash<int, int> :: const_iterator it;
+    bool bRet;
+
+    myQHash[1] = 500;
+    myQHash[2] = 300;
+    myQHash[3] = 100;
+
+    it = myQHash.cbegin();
+
+    bRet = myQHash.contains(it.key());
+
+    assert(bRet == true);
+
     return 0;
 }
