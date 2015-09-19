@@ -16,7 +16,9 @@
 
 #include "SimulatorController.h"
 
-#include <QtCore/qmath.h>
+//#include <QtCore/qmath.h>
+#include <QtCore>
+#include <cmath>
 #include <QDateTime>
 #include <QNetworkInterface>
 
