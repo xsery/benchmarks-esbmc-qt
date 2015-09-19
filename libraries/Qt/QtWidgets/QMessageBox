@@ -1,0 +1,20 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+
+#ifndef _QMESSAGEBOX_H
+#define _QMESSAGEBOX_H
+
+class QMessageBox {
+public:
+	QMessageBox();
+	~QMessageBox();
+};
+
+#endif //_QMESSAGEBOX_H

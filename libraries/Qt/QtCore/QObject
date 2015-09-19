@@ -7,6 +7,7 @@ Author: Felipe Rodrigues
 \*******************************************************************/
 
 #include <../QtGui/QPushButton>
+#include "qnamespace.h"
 /*
 #define Q_OBJECT
 #define signals public
@@ -26,6 +27,7 @@ class QObject
 public:
 	QObject ( QObject * parent = 0 ){}
 	~QObject (){}
+	bool connect(const QObject *sender, const char *signal, const char *member, Qt::ConnectionType type = Qt::AutoConnection) const{}
 	static bool connect(QPushButton *, const char *, const char *, const char *){}
 
 #if 0	

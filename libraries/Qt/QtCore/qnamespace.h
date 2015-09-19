@@ -150,4 +150,14 @@ namespace Qt
              // Add new attributes before this line
              WA_AttributeCount
     }; //enum WidgetAttribute
+    
+    enum ConnectionType {
+        AutoConnection,
+        DirectConnection,
+        QueuedConnection,
+        BlockingQueuedConnection,
+        UniqueConnection =  0x80
+    }; //ConnectionType
+
+    
 } // namespace Qt 

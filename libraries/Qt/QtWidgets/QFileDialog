@@ -1,0 +1,20 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+
+#ifndef _QFILEDIALOG_H
+#define _QFILEDIALOG_H
+
+class QFileDialog {
+public:
+	QFileDialog();
+	~QFileDialog();
+};
+
+#endif //_QFILEDIALOG_H
