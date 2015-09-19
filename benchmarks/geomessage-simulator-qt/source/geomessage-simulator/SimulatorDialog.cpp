@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #include "SimulatorDialog.h"
-#include "ui_SimulatorDialog.h"
+//#include "ui_SimulatorDialog.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -38,8 +38,9 @@ SimulatorDialog::SimulatorDialog(bool isVerboseOutput, QWidget *parent) :
 
   ui->spinBox_port->setValue(controller.getPort());
 
-  connect(&controller, SIGNAL(readGeomessage(Geomessage)), this, SLOT(addGeomessageToTable(Geomessage)));
-  connect(&controller, SIGNAL(advancedToGeomessage(int)), this, SLOT(selectGeomessageInTable(int)));
+//  connect(&controller, SIGNAL(readGeomessage(Geomessage)), this, SLOT(addGeomessageToTable(Geomessage)));
+  connect(&controller, readGeomessage(Geomessage), this, addGeomessageToTable(Geomessage));
+//  connect(&controller, SIGNAL(advancedToGeomessage(int)), this, SLOT(selectGeomessageInTable(int)));
 }
 
 SimulatorDialog::~SimulatorDialog()

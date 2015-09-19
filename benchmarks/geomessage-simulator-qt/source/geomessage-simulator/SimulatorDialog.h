@@ -33,7 +33,7 @@ namespace Ui {
  * \brief	Dialog for setting the simulator. 
  */
 class SimulatorDialog : public QMainWindow {
-  Q_OBJECT
+//  Q_OBJECT
 public:
   /*!
    * \fn	SimulatorDialog::SimulatorDialog(QWidget *parent = 0);
