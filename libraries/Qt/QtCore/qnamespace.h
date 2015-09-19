@@ -7,6 +7,8 @@ Author: Mário Angel
 Date: 
 
 \*******************************************************************/
+#ifndef _QNAMESPACE_H
+#define _QNAMESPACE_H
 
 namespace Qt
 {
@@ -160,4 +162,6 @@ namespace Qt
     }; //ConnectionType
 
     
-} // namespace Qt 
+} // namespace Qt
+
+#endif //_QNAMESPACE_H

@@ -24,11 +24,18 @@ public:
 		this->str = tmp;
 		this->_size = 0;
 	}
+
 	QString ( char * unicode ){
 		__ESBMC_assert(unicode != NULL, "Invalid string");
 		this->str = unicode;
 		this->_size = strlen(unicode);
 	}
+
+	QString ( char * _str ) const{
+	     __ESBMC_assert(_str != NULL, "Invalid parameter");
+	     str = _str;
+	}
+
 	std::string	toStdString () const
         {
             return std::string(this->str);

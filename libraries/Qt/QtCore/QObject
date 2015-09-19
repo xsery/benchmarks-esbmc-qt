@@ -5,6 +5,8 @@ Author: Felipe Rodrigues
 
 
 \*******************************************************************/
+#ifndef _QOBJECT_H
+#define _QOBJECT_H
 
 #include <../QtGui/QPushButton>
 #include "qnamespace.h"
@@ -44,5 +46,6 @@ public:
 #endif
         ){}
 #endif
-
 };
+
+#endif //_QOBJECT_H

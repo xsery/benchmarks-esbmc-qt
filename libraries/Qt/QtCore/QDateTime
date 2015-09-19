@@ -7,9 +7,19 @@ Author: Mário Angel
 Date: 
 
 \*******************************************************************/
+#ifndef _QDATETIME_H
+#define _QDATETIME_H
 
-class QDateTime {
+#include "QString"
+
+class QDateTime{
 public:
-	QDateTime();
-	~QDateTime();
+     QDateTime(){}
+     static QDateTime currentDateTimeUtc();
+     QString toString( const QString &format)const{}
+     ~QDateTime(){}
 };
+
+
+
+#endif //_QDATETIME_H

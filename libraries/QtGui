@@ -1,7 +1,7 @@
 #ifndef __QTGUI_H__
 #define __QTGUI_H__
 
-#include <string>
+#include "../QtCore/QString"
 #include <fstream>
 
 typedef float qreal;
@@ -11,14 +11,12 @@ typedef const char * qApp;
 #define SLOT(a)     qFlagLocation("1"#a)
 #define emit
 #define animatedtiles
-#define signals public
 #define Q_OBJECT
-#define slots
 #define Q_SIGNALS public
 #define QT_BEGIN_NAMESPACE
 #define QT_END_NAMESPACE
 
-//#define QString std::string
+
 
 #if 0
 #define Q_PROPERTY

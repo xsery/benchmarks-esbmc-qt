@@ -7,9 +7,30 @@ Author: Mário Angel
 Date: 
 
 \*******************************************************************/
+#ifndef _QSETTINGS_H
+#define _QSETTINGS_H
 
 class QSettings {
+
+private:
+   char *strSettings;
+   char *strAux;
+
 public:
-	QSettings();
-	~QSettings();
+	QSettings(){}
+
+        QSettings ( char * _str ){
+	     __ESBMC_assert(_str != NULL, "Invalid parameter");
+	     strSettings = _str;
+	}
+
+        QSettings ( char *str1, char *str2 ){
+	     __ESBMC_assert(str1 != NULL && str2 != NULL, "Invalid parameter");
+	     strSettings = str1;
+             strAux = str2;
+	}
+
+	~QSettings(){}
 };
+
+#endif //_QSETTINGS_H

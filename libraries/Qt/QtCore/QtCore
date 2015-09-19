@@ -1,12 +1,15 @@
 #ifndef __QTCORE_H__
 #define __QTCORE_H__
 
+#include "QDateTime"
 #include "QtDefines.h"
 #include "QMutex"
 #include "qnamespace.h"
+#include "QSettings"
 #include "QTextStream"
 #include "QThread"
 #include "QUrl"
+#include "QXmlStreamWriter"
 
 
 void qWarning ( const char * msg, ... ){}

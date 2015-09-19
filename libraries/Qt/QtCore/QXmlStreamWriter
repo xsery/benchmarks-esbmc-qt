@@ -1,0 +1,26 @@
+/*******************************************************************\
+
+Module: 
+
+Author: Mário Angel
+
+Date: 
+
+\*******************************************************************/
+#ifndef _QXMLSTREAMWRITER_H
+#define _QXMLSTREAMWRITER_H
+
+#include "QString"
+
+class QXmlStreamWriter{
+public:
+     QXmlStreamWriter(){}
+     QXmlStreamWriter(QString *string){}
+      
+     void writeStartElement(const QString &qualifiedName);
+     
+     ~QXmlStreamWriter(){}
+
+};
+
+#endif //_QXMLSTREAMWRITER_H

@@ -7,9 +7,16 @@ Author: Mário Angel
 Date: 
 
 \*******************************************************************/
+#ifndef _QTIMEREVENT_H
+#define _QTIMEREVENT_H
 
 class QTimerEvent {
 public:
-	QTimerEvent();
-	~QTimerEvent();
+     QTimerEvent();
+     ~QTimerEvent();
+
+     int timerId() const{}
+
 };
+
+#endif //_QTIMEREVENT_H

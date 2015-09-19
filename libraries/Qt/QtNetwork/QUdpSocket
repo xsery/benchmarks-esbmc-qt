@@ -11,10 +11,13 @@ Date:
 #ifndef _QUDPSOCKET_H
 #define _QUDPSOCKET_H
 
+#include "../QtCore/QObject"
+
 class QUdpSocket {
 public:
-	QUdpSocket();
-	~QUdpSocket();
+	QUdpSocket(){}
+        QUdpSocket( QObject * parent = 0 ){}
+	~QUdpSocket(){}
 };
 
 #endif //_QUDPSOCKET_H
