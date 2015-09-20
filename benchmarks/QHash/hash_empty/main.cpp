@@ -1,11 +1,18 @@
 #include <cassert>
 #include <QHash>
-#include <QString>
+#include<iostream>
+
 using namespace std;
 
 int main ()
 {
-    QHash<QString, int> hash;
-    assert(hash.size() == 0);
+    QHash<int, int> myQHash;
+    QHash<int, int> :: const_iterator it;
+    bool bRet;
+
+    bRet = myQHash.empty();
+
+    assert(bRet == true);
+
     return 0;
 }
