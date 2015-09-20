@@ -7,13 +7,20 @@ int main ()
     QHash<int, int> myQHash2;
     QHash<int, int> :: const_iterator it;
 
+
     myQHash1[1] = 500;
     myQHash1[2] = 300;
     myQHash1[3] = 100;
 
-    myQHash1.swap(myQHash2);
+    myQHash2[1] = 900;
+    myQHash2[2] = 800;
+    myQHash2[3] = 700;
+    myQHash2[4] = 600;
 
-    assert(myQHash2.isEmpty() == false);
+
+    myQHash1 = myQHash2;
+
+    assert(myQHash1.size != 4);
 
     return 0;
 }

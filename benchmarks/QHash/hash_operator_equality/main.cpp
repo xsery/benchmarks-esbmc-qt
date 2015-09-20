@@ -11,9 +11,11 @@ int main ()
     myQHash1[2] = 300;
     myQHash1[3] = 100;
 
-    myQHash1.swap(myQHash2);
+    myQHash2[1] = 500;
+    myQHash2[2] = 300;
+    myQHash2[3] = 100;
 
-    assert(myQHash2.isEmpty() == false);
+    assert((myQHash1 == (myQHash2)) == true);
 
     return 0;
 }
