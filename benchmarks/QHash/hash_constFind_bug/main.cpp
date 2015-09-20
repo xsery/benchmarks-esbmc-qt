@@ -10,7 +10,6 @@ int main ()
     myQHash[2] = 300;
     myQHash[3] = 100;
 
-    it = myQHash.constBegin();
     it = myQHash.constFind(2);
 
     assert(it.key() != 2);
