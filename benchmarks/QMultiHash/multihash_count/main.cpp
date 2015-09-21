@@ -1,19 +1,16 @@
-#include <QMultiHash>
 #include <cassert>
-#include <QString>
-#include <iostream>
-
-using namespace std;
+#include <QMultiHash>
 
 int main ()
 {
-    QMultiHash<QString, int> hash1, hash2, hash3;
-    
-    hash1.insert("plenty", 100);
-    hash1.insert("plenty", 2000);
-    // hash1.size() == 2
-    
-    hash2.insert("plenty", 5000);
-    // hash2.size() == 1
+    QMultiHash<int, int> hash1;
+    QMultiHash<int, int> :: const_iterator it;
+
+    hash1.insert(1,500);
+    hash1.insert(2,300);
+    hash1.insert(3,100);
+
+    assert((hash1.count(3,100)) > 0);
+
     return 0;
 }
