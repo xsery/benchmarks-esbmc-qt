@@ -15,12 +15,11 @@ int main ()
     myQHash2[1] = 900;
     myQHash2[2] = 800;
     myQHash2[3] = 700;
-    myQHash2[4] = 600;
 
 
     myQHash1 = myQHash2;
 
-    assert(myQHash1.size == 4);
+    assert(myQHash1.size == 3);
 
     return 0;
 }

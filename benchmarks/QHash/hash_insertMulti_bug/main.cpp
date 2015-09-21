@@ -1,8 +1,5 @@
 #include <cassert>
 #include <QHash>
-#include <iostream>
-
-using namespace std;
 
 int main ()
 {
@@ -15,23 +12,7 @@ int main ()
 
     it = myQHash.insertMulti(4,900);
 
-    it = myQHash.begin();
-
-    assert(it.key() != 1);
-    assert(it.value() != 500);
-    it++;
-    assert(it.key() != 2);
-    assert(it.value() != 300);
-    it++;
-    assert(it.key() != 3);
-    assert(it.value() != 100);
-    it++;
-    assert(it.key() != 4);
-    assert(it.value() != 900);
-
-    // show content:
-    for ( it=myQHash.begin() ; it != myQHash.end(); it++ )
-      cout << it.key() << " => " << it.value() << endl;
+    assert(myQHash.contains(it.key()) != true);
 
     return 0;
 }

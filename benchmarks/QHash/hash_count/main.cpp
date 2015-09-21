@@ -13,9 +13,7 @@ int main ()
     myQHash[3] = 100;
 
     it = myQHash.cbegin();
-    it++;
-    it++;
-
+    
     iRet = myQHash.count(it.key());
 
     assert(iRet != 0);

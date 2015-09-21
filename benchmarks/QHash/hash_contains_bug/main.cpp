@@ -21,7 +21,7 @@ int main ()
 
     bRet = myQHash.contains(it.key());
 
-    assert(bRet == true);
+    assert(bRet != true);
 
     return 0;
 }

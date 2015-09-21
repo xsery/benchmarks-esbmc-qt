@@ -15,7 +15,7 @@ int main ()
     myQHash2[2] = 300;
     myQHash2[3] = 100;
 
-    assert((myQHash1 != (myQHash2)) == true);
+    assert(myQHash1 != myQHash2);
 
     return 0;
 }
