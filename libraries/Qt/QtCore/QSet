@@ -11,7 +11,7 @@
 #ifndef __QSet
 #define __QSet
 
-#include "QList"
+//#include "QList"
 
 #define MAX 500
 
@@ -384,14 +384,14 @@ namespace std {
         void	squeeze(){
             //TODO
         }
-        
+        #if 0
         QList<Key> toList() const{
             QList<Key> __list;
             for (int i = 0; i < this->_size; i++)
                 __list.push_back(this->buf[i]);
             return __list;
         }
-        
+        #endif
         bool remove(const Key & value){
             bool __flag = false;
             for (int i = 0; i < this->_size; i++) {
@@ -426,11 +426,11 @@ namespace std {
                     this->insert(this->buf[i]);
             return *this;
         }
-        
+        /*
         QList<Key> QSet::values() const{
             return this->toList();
         }
-        
+        */
         bool	operator!=(const QSet<Key> & other) const{
             if (this->_size != other._size)
                 return true;
