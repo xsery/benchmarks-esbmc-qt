@@ -11,7 +11,7 @@
 #define __STL_QLIST
 
 #include "../../definitions.h" //OK
-#include "QSet" //OK
+//#include "QSet" //OK
 //#include "QVector" //OK
 #include "../../list" //OK
 
@@ -19,6 +19,7 @@
 
     template<class T>
     class QList {
+
     public:
         typedef T& reference; //OK
         typedef const T& const_reference; //OK
@@ -176,7 +177,7 @@
             }
             this->_size = 0;
         }
-        
+
         void append(const T& value){
             this->push_back(value);
         }
@@ -203,7 +204,7 @@
             }
             return -1;
         }
-        
+      
         iterator& begin() {
             iterator it;
             it.it = &(this->_list[0]);
@@ -263,7 +264,7 @@
             it.pos = this->_size;
             return it;
         }
-        
+
         bool contains(const T & value) const{
             for (int i = 0; i < this->_size; i++)
                 if (this->_list[i] == value)
@@ -282,13 +283,13 @@
         int	count() const{
             return this->_size;
         }
-        
+        /*
         bool endsWith(const T& value) const{
             if (!(this->empty()) & this->_list[this->_size - 1] == value)
                 return true;
             return false;
         }
-        
+        */
         T& first(){
             return this->front();
         }
@@ -301,7 +302,7 @@
             return this->_size;
         }
         
-        QList<T> mid(int pos, int length = -1) const{
+        QList<T>& mid(int pos, int length) {
             __ESBMC_assert(pos >= 0 & pos < this->_size,"Position invalid.");
             __ESBMC_assert(length >= 0 & length <= this->_size,"Position invalid.");
             QList<T> __newList;
@@ -313,7 +314,7 @@
             }
             return __newList;
         }
-        
+
         void move(int from, int to){
             __ESBMC_assert(from >= 0 && from < this->_size, "First position invalid.");
             __ESBMC_assert(to >= 0 && to < this->_size, "Second position invalid.");
@@ -334,8 +335,8 @@
         
         void prepend(const T & value){
             this->insert(this->begin(),value);
-        }
-        
+        } 
+  
         int	removeAll(const T & value){
             int j = 0;
             for (int i = 0 ; i < this->_size; i++)
@@ -414,9 +415,9 @@
             return x;
         }
         
-        QSet<T>	toSet() const{
+        //QSet<T>	toSet() const{
             //TODO
-        }
+        //}
         
         std::list<T> toStdList() const{
             std::list<T> __list;
@@ -445,7 +446,7 @@
         size_type size() const {
             return this->_size;
         }
-        
+          
         bool empty() const {
             if (this->_size == 0)
                 return true;
@@ -457,7 +458,7 @@
                 return true;
             return false;
         }
-        
+      
         T& back() {
             __ESBMC_assert(!empty(),
                            "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
@@ -469,7 +470,7 @@
                            "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
             return this->_list[this->_size-1];
         }
-        
+       
         T& last() {
             __ESBMC_assert(!empty(),
                            "\n  This method returns a reference to the last element in the list container.\n  Therefore, the list can't be empty.\n");
@@ -510,7 +511,7 @@
             this->_list[this->_size -1] = value_type();
             this->_size--;
         }
-        
+  
         void push_back(const value_type& x) {
             this->_list[this->_size] = x;
             this->_size++;
@@ -525,7 +526,7 @@
             this->_list[0] = x;
             this->_size++;
         }
-        
+           
         iterator insert(iterator& position, const value_type& x) {
             for(int i = position.pos; i < this->_size; i++){
                 this->_list[i + 1] = this->_list[i];
@@ -544,7 +545,7 @@
             this->_list[position] = x;
             this->_size++;
         }
-        
+     
         int lastIndexOf(const T& value, int from = -1) const{
             __ESBMC_assert(from >= -1 && from < this->_size, "Position invalid.");
             if (from == -1)
@@ -589,9 +590,13 @@
         }
         
         void clear() {
-            this->~QList();
+            for(int i = 0; i < this->_size; i++){
+                this->_list[i] = T();
+            }
+            this->_size = 0;
         }
-        
+ 
+             
         bool operator==(const QList<T>& other) {
             if (this->_size == other._size)
                 return true;
@@ -612,7 +617,7 @@
             return false;
         }
         
-        QList<T> operator+(const QList<T>& other) {
+        QList<T>& operator+(const QList<T>& other) {
             QList<T> _tmp;
             int i = 0;
             for (; i < this->_size; i++)
@@ -668,11 +673,11 @@
             return this->_list[i];
         }
         
-        static QList<T> fromSet(const QSet<T> & set){
+        //QList<T> fromSet(const QSet<T> & set){
             //TODO
-        }
+        //}
         
-        static QList<T> fromStdList(const std::list<T>& list){
+        QList<T>& fromStdList(const std::list<T>& list){
             //TODO
         }
         
