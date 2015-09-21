@@ -8,7 +8,6 @@ int main ()
 {
     QHash<int, int> myQHash;
     QHash<int, int> :: const_iterator it;
-    bool bRet;
 
     myQHash[1] = 500;
     myQHash[2] = 300;
@@ -16,9 +15,7 @@ int main ()
 
     it = myQHash.cbegin();
 
-    bRet = myQHash.contains(it.key());
-
-    assert(bRet == true);
+    assert(myQHash.contains(it.key()));
 
     return 0;
 }

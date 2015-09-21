@@ -12,7 +12,7 @@ int main ()
     myQHash["fgh"] = 100;
 
     it = myQHash.begin();
-    assert(myQHash.contains(it.key()) != true);
+    assert(!(myQHash.contains(it.key())));
 
 
     return 0;

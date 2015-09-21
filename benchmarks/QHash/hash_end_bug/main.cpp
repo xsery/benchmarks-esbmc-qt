@@ -13,7 +13,7 @@ int main ()
 
     it = myQHash.end();
 
-    assert(myQHash.contains(it.key()) != true);
+    assert(!(myQHash.contains(it.key())) );
 
     return 0;
 }

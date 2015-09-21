@@ -15,7 +15,7 @@ int main ()
 
     it = myQHash.insertMulti(4,900);
 
-    assert(myQHash.contains(it.key()) == true);
+    assert(myQHash.contains(it.key()));
 
     return 0;
 }

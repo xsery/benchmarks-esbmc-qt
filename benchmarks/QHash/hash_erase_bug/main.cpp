@@ -22,7 +22,7 @@ int main ()
         it = myQHash.erase(it);
     }
 
-    assert(myQHash.empty()== true);
+    assert(!(myQHash.empty()));
 
     return 0;
 }
